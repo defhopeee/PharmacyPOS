@@ -1,4 +1,4 @@
-# 💊 PharmacyPOS
+# PharmacyPOS
 
 A complete, secure **Pharmacy Point-of-Sale & Inventory Management System** built with **Laravel 12**, plain **HTML/CSS/JS** (no front-end build step required), and **MySQL/MariaDB**.
 
@@ -6,12 +6,12 @@ It has **two sides**:
 
 | Side | Who | What they can do |
 |------|-----|------------------|
-| 🧑‍💼 **Owner** | Pharmacy owner / manager | Full dashboard, manage products, categories, suppliers & staff, view all sales, run reports |
-| 🧑‍🔧 **Attendant** | Counter staff | Fast Point-of-Sale checkout, view their own sales, print receipts |
+| **Owner** | Pharmacy owner / manager | Full dashboard, manage products, categories, suppliers & staff, view all sales, run reports |
+| **Attendant** | Counter staff | Fast Point-of-Sale checkout, view their own sales, print receipts |
 
 ---
 
-## ✨ Features
+## Features
 
 - **Role-based two-sided system** — separate, secure workspaces for owners and attendants.
 - **Fast Point of Sale** — live product search, category filtering, cart, discounts, tax, change calculation, and instant printable receipts.
@@ -20,12 +20,12 @@ It has **two sides**:
 - **Owner dashboard** — revenue stats, 7-day sales chart, top products, low-stock and expiry alerts.
 - **Reports** — date-range sales reports by day, payment method and best-selling products (printable).
 - **Staff management** — owners create/disable owner & attendant accounts with strong-password enforcement.
-- **Security first** — see [Security](#-security) below.
+- **Security first** — see [Security](#security) below.
 - **SEO** — public landing page with full meta tags, Open Graph, Twitter cards, JSON-LD structured data, `sitemap.xml` and `robots.txt`.
 
 ---
 
-## 🗄️ Database Design
+## Database Design
 
 > **Naming convention:** every table and every column uses a **single lowercase word with no underscores** (e.g. `saleitems`, `categoryid`, `createdat`, `remembertoken`) as required.
 
@@ -40,7 +40,7 @@ It has **two sides**:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Requirements
 - PHP 8.2+
@@ -74,7 +74,7 @@ Visit **http://localhost:8000**
 
 ---
 
-## 🔑 Demo Accounts
+## Demo Accounts
 
 All seeded users share the password: **`Password123!`**
 
@@ -89,7 +89,7 @@ The seeder also creates **7 categories, 3 suppliers, 18 products** and **~40 sam
 
 ---
 
-## 🔒 Security
+## Security
 
 PharmacyPOS is built to be safe by default:
 
@@ -107,7 +107,7 @@ PharmacyPOS is built to be safe by default:
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 
 - **Backend:** Laravel 12, PHP 8.2
 - **Database:** MySQL / MariaDB
@@ -115,7 +115,7 @@ PharmacyPOS is built to be safe by default:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 app/
@@ -137,8 +137,8 @@ routes/web.php
 
 ---
 
-## 📜 License
+## License
 
 Released under the MIT License.
 
-Built with ❤️ using Laravel.
+Built with Laravel.
