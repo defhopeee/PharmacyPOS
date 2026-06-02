@@ -2,6 +2,20 @@
 
 use Illuminate\Support\Carbon;
 
+if (! function_exists('asset_v')) {
+    /**
+     * Versioned asset URL — appends the file's last-modified time so browsers
+     * always pick up CSS/JS changes instead of serving a stale cached copy.
+     */
+    function asset_v(string $path): string
+    {
+        $full = public_path($path);
+        $version = is_file($full) ? filemtime($full) : '1';
+
+        return asset($path).'?v='.$version;
+    }
+}
+
 if (! function_exists('money')) {
     /**
      * Format an amount as Kenyan Shillings.

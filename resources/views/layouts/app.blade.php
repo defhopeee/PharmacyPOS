@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') · {{ config('app.name') }}</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset_v('css/app.css') }}">
 </head>
 <body>
 @php $user = auth()->user(); $owner = $user->isOwner(); @endphp
@@ -120,7 +120,7 @@
         }
     })();
 </script>
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset_v('js/app.js') }}"></script>
 @stack('scripts')
 </body>
 </html>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>Receipt {{ $sale->reference }}</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset_v('css/app.css') }}">
 </head>
 <body style="background:#f1f5f9">
 <div class="receipt">

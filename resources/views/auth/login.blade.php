@@ -6,25 +6,37 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Sign in · {{ config('app.name') }}</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset_v('css/app.css') }}">
 </head>
 <body>
 <div class="auth-wrap">
     <div class="auth-side">
-        <img src="{{ asset('images/logo.svg') }}" alt="PharmacyPOS" style="width:54px;height:54px;border-radius:14px;margin-bottom:24px">
-        <h1>PharmacyPOS</h1>
-        <p>The complete point-of-sale and inventory platform built for modern pharmacies.</p>
-        <ul>
-            <li><x-icon name="check" size="15" /> Lightning-fast checkout for attendants</li>
-            <li><x-icon name="check" size="15" /> Full inventory &amp; staff control for owners</li>
-            <li><x-icon name="check" size="15" /> Real-time sales reporting</li>
-            <li><x-icon name="check" size="15" /> Secure, role-based access</li>
+        <div class="auth-top">
+            <div class="auth-brand">
+                <img src="{{ asset('images/logo.svg') }}" alt="PharmacyPOS">
+                <span>PharmacyPOS</span>
+            </div>
+            <h1>Run your pharmacy<br>with ease.</h1>
+            <p>The complete point-of-sale and inventory platform built for modern Kenyan pharmacies.</p>
+        </div>
+
+        <ul class="auth-features">
+            <li><span class="afi"><x-icon name="cart" size="18" /></span> Lightning-fast checkout for attendants</li>
+            <li><span class="afi"><x-icon name="package" size="18" /></span> Full inventory &amp; staff control for owners</li>
+            <li><span class="afi"><x-icon name="trending" size="18" /></span> Real-time sales reporting &amp; alerts</li>
+            <li><span class="afi"><x-icon name="lock" size="18" /></span> Secure, role-based access</li>
         </ul>
+
+        <div class="auth-foot">
+            <span class="chip"><x-icon name="dollar" size="14" /> KSh pricing</span>
+            <span class="chip"><x-icon name="phone" size="14" /> M-Pesa ready</span>
+            <span class="chip"><x-icon name="check" size="14" /> Soft deletes &amp; backups</span>
+        </div>
     </div>
 
     <div class="auth-form">
         <div class="box">
-            <h2 style="font-size:1.6rem">Welcome back</h2>
+            <h2 style="font-size:1.5rem">Welcome back</h2>
             <p class="muted" style="margin-top:0">Sign in to your account to continue.</p>
 
             @if($errors->any())
@@ -51,7 +63,7 @@
                     <input type="checkbox" id="remember" name="remember" style="width:auto">
                     <label for="remember" style="margin:0">Remember me on this device</label>
                 </div>
-                <button type="submit" class="btn primary block">Sign in</button>
+                <button type="submit" class="btn primary block"><x-icon name="logout" size="16" /> Sign in</button>
             </form>
         </div>
     </div>

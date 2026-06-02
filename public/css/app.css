@@ -156,18 +156,22 @@ table.data td.num, table.data th.num { text-align: right; }
 .alert.err { background: #ffe4e6; color: #be123c; }
 
 /* ---------- Auth / landing ---------- */
-.auth-wrap { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+.auth-wrap { min-height: 100vh; display: grid; grid-template-columns: 1.05fr 1fr; }
 .auth-side {
-    background: linear-gradient(150deg, var(--brand-dark), #0b1220);
-    color: #fff; padding: 60px; display: flex; flex-direction: column; justify-content: center;
+    background: radial-gradient(1200px 500px at -10% -10%, rgba(45,212,191,.25), transparent 60%), linear-gradient(150deg, var(--brand-dark), #0b1220);
+    color: #fff; padding: 48px 56px; display: flex; flex-direction: column; justify-content: space-between; gap: 28px;
 }
-.auth-side h1 { font-size: 2.4rem; color: #fff; }
-.auth-side p { color: #cbd5e1; max-width: 420px; }
-.auth-side ul { list-style: none; padding: 0; margin: 28px 0 0; }
-.auth-side li { padding: 8px 0; color: #e2e8f0; }
+.auth-brand { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 800; }
+.auth-brand img { width: 44px; height: 44px; border-radius: 12px; }
+.auth-top h1 { font-size: 2.5rem; color: #fff; margin: 30px 0 14px; line-height: 1.1; }
+.auth-top p { color: #cbd5e1; max-width: 440px; font-size: 1.02rem; margin: 0; }
+.auth-features { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.auth-features li { display: flex; align-items: center; gap: 13px; color: #e2e8f0; font-weight: 500; }
+.auth-features .afi { width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,.1); display: grid; place-items: center; color: #5eead4; flex: 0 0 auto; }
+.auth-foot { display: flex; flex-wrap: wrap; gap: 8px; }
+.auth-foot .chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); color: #cbd5e1; font-size: .78rem; padding: 6px 11px; border-radius: 999px; }
 .auth-form { display: flex; align-items: center; justify-content: center; padding: 40px; }
 .auth-form .box { width: 100%; max-width: 380px; }
-.cred-hint { background: #f8fafc; border: 1px dashed var(--line); border-radius: 10px; padding: 12px; font-size: .82rem; color: var(--muted); margin-top: 18px; }
 
 /* ---------- Pagination ---------- */
 .pagination { display: flex; gap: 6px; list-style: none; padding: 0; margin: 18px 0 0; flex-wrap: wrap; align-items: center; }
