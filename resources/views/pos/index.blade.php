@@ -9,14 +9,13 @@
         'price' => (float) $p->price,
         'stock' => $p->quantity,
         'category' => $p->category->name ?? 'Uncategorized',
-        'barcode' => $p->barcode,
     ]);
 @endphp
 
 <div class="pos" style="margin:-20px">
     <section class="catalog">
         <div class="pos-search">
-            <input type="text" id="search" placeholder="Search products by name or scan barcode…" autofocus>
+            <input type="text" id="search" placeholder="Search products…" autofocus>
         </div>
         <div class="cat-tabs" id="cattabs">
             <button class="active" data-cat="all">All</button>
@@ -40,7 +39,7 @@
             <div class="pay-grid">
                 <div>
                     <label class="muted" style="font-size:.78rem">Payment Method</label>
-                    <select id="method"><option value="cash">Cash</option><option value="card">Card</option><option value="mpesa">M-Pesa</option></select>
+                    <select id="method"><option value="cash">Cash</option><option value="mpesa">M-Pesa</option></select>
                 </div>
                 <div>
                     <label class="muted" style="font-size:.78rem">Amount Paid (KSh)</label>
@@ -77,7 +76,7 @@ function renderProducts() {
     const grid = document.getElementById('prodgrid');
     const list = CATALOG.filter(p =>
         (activeCat === 'all' || p.category === activeCat) &&
-        (!term || p.name.toLowerCase().includes(term) || (p.barcode && p.barcode.toLowerCase().includes(term)))
+        (!term || p.name.toLowerCase().includes(term))
     );
     if (!list.length) { grid.innerHTML = '<p class="muted">No matching products.</p>'; return; }
     grid.innerHTML = list.map(p => `
@@ -202,8 +201,6 @@ async function checkout() {
         mpesareceipt = await runMpesa(total, btn);
         if (!mpesareceipt) { btn.disabled = false; btn.textContent = 'Complete Sale'; return; }
         paid = total;
-    } else if (method === 'card') {
-        paid = total;
     }
 
     btn.textContent = 'Processing…';
@@ -235,7 +232,7 @@ document.getElementById('method').addEventListener('change', function () {
     const isMpesa = this.value === 'mpesa';
     document.getElementById('mpesarow').style.display = isMpesa ? 'grid' : 'none';
     const paid = document.getElementById('paid');
-    if (this.value === 'card' || isMpesa) { paid.value = cartTotal().toFixed(2); paid.readOnly = true; }
+    if (isMpesa) { paid.value = cartTotal().toFixed(2); paid.readOnly = true; }
     else { paid.readOnly = false; }
     recalc();
 });

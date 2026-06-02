@@ -68,9 +68,9 @@ class DatabaseSeeder extends Seeder
     private function seedSuppliers(): array
     {
         $suppliers = [
-            ['name' => 'MediSource Distributors', 'phone' => '+254 720 100 200', 'email' => 'medisourcesales@gmail.com', 'address' => 'Enterprise Road, Industrial Area, Nairobi'],
-            ['name' => 'HealthLine Pharma', 'phone' => '+254 711 200 201', 'email' => 'healthlineorders@gmail.com', 'address' => 'Moi Avenue, Mombasa'],
-            ['name' => 'GlobalMed Supplies', 'phone' => '+254 799 300 202', 'email' => 'globalmedinfo@gmail.com', 'address' => 'Kenyatta Avenue, Nakuru'],
+            ['name' => 'MediSource Distributors', 'phone' => '0720100200', 'email' => 'medisourcesales@gmail.com', 'address' => 'Enterprise Road, Industrial Area, Nairobi'],
+            ['name' => 'HealthLine Pharma', 'phone' => '0711200201', 'email' => 'healthlineorders@gmail.com', 'address' => 'Moi Avenue, Mombasa'],
+            ['name' => 'GlobalMed Supplies', 'phone' => '0799300202', 'email' => 'globalmedinfo@gmail.com', 'address' => 'Kenyatta Avenue, Nakuru'],
         ];
 
         $list = [];
@@ -110,8 +110,7 @@ class DatabaseSeeder extends Seeder
                 [
                     'categoryid' => $categories[$cat]->id,
                     'supplierid' => $suppliers[$i % count($suppliers)]->id,
-                    'barcode' => '50' . str_pad((string) ($i + 1), 6, '0', STR_PAD_LEFT),
-                    'description' => $name . ' — quality assured pharmaceutical product.',
+                    'description' => $name . ' quality assured pharmaceutical product.',
                     'price' => $price,
                     'cost' => $cost,
                     'quantity' => $qty,
@@ -130,7 +129,7 @@ class DatabaseSeeder extends Seeder
 
         $attendants = User::where('role', 'attendant')->get();
         $products = Product::all();
-        $methods = ['cash', 'card', 'mpesa'];
+        $methods = ['cash', 'mpesa'];
 
         // Spread ~40 sales across the last 14 days.
         for ($n = 0; $n < 40; $n++) {

@@ -23,7 +23,7 @@
                     <td>
                         <div class="btn-row">
                             <button class="btn ghost sm" data-modal-open="category-modal" data-action="{{ route('owner.categories.update', $c) }}" data-record='@json($record)'>Edit</button>
-                            <form method="POST" action="{{ route('owner.categories.destroy', $c) }}" class="ajax-form" onsubmit="return confirm('Archive this category?')">
+                            <form method="POST" action="{{ route('owner.categories.destroy', $c) }}" class="ajax-form" data-confirm="Delete this category?">
                                 @csrf @method('DELETE')
                                 <button class="btn danger sm">Delete</button>
                             </form>

@@ -19,7 +19,6 @@ class Product extends Model
         'name',
         'categoryid',
         'supplierid',
-        'barcode',
         'description',
         'price',
         'cost',

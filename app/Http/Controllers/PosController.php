@@ -62,7 +62,7 @@ class PosController extends Controller
             'items.*.id' => ['required', 'integer', 'exists:products,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1'],
             'paid' => ['required', 'numeric', 'min:0'],
-            'method' => ['required', 'in:cash,card,mpesa'],
+            'method' => ['required', 'in:cash,mpesa'],
             'mpesareceipt' => ['nullable', 'string', 'max:50'],
         ]);
 

@@ -16,12 +16,15 @@
     table.data th { text-align: left; font-size: 9px; text-transform: uppercase; color: #64748b; border-bottom: 1px solid #cbd5e1; padding: 5px 6px; }
     table.data td { padding: 5px 6px; border-bottom: 1px solid #e2e8f0; }
     .num { text-align: right; }
+    table.log { table-layout: fixed; }
+    table.log td { word-wrap: break-word; vertical-align: top; }
+    table.log .num { white-space: nowrap; }
     .foot { margin-top: 16px; font-size: 9px; color: #94a3b8; text-align: center; }
 </style>
 </head>
 <body>
     <div class="head">
-        <h1>PharmacyPOS — Sales Report</h1>
+        <h1>PharmacyPOS Sales Report</h1>
         <div class="muted">
             Period: {{ \Illuminate\Support\Carbon::parse($from)->format('d M Y') }} to {{ \Illuminate\Support\Carbon::parse($to)->format('d M Y') }}
             &nbsp;•&nbsp; Generated {{ $generatedAt->format('d M Y H:i') }}
@@ -41,7 +44,7 @@
         <thead><tr><th>Staff</th><th class="num">Orders</th><th class="num">Total</th></tr></thead>
         <tbody>
         @forelse($bystaff as $r)
-            <tr><td>{{ $r->user->name ?? '—' }}</td><td class="num">{{ $r->orders }}</td><td class="num">{{ money($r->total) }}</td></tr>
+            <tr><td>{{ $r->user->name ?? 'None' }}</td><td class="num">{{ $r->orders }}</td><td class="num">{{ money($r->total) }}</td></tr>
         @empty
             <tr><td colspan="3" class="muted">No data.</td></tr>
         @endforelse
@@ -72,15 +75,22 @@
         </tbody>
     </table>
 
-    <h2>Transaction Log — who sold what, when</h2>
-    <table class="data">
-        <thead><tr><th>Date &amp; Time</th><th>Reference</th><th>Sold by</th><th>Items</th><th class="num">Total</th><th>Method</th></tr></thead>
+    <h2>Transaction Log: who sold what, when</h2>
+    <table class="data log">
+        <thead><tr>
+            <th style="width:15%">Date &amp; Time</th>
+            <th style="width:16%">Reference</th>
+            <th style="width:15%">Sold by</th>
+            <th style="width:34%">Items</th>
+            <th class="num" style="width:11%">Total</th>
+            <th style="width:9%">Method</th>
+        </tr></thead>
         <tbody>
         @forelse($log as $s)
             <tr>
-                <td>{{ $s->createdat->format('d M Y H:i') }}</td>
+                <td>{{ $s->createdat->format('d M Y') }}<br>{{ $s->createdat->format('H:i') }}</td>
                 <td>{{ $s->reference }}</td>
-                <td>{{ $s->user->name ?? '—' }}</td>
+                <td>{{ $s->user->name ?? 'None' }}</td>
                 <td>{{ $s->items->map(fn($i) => $i->name.' x'.$i->quantity)->implode(', ') }}</td>
                 <td class="num">{{ money($s->total) }}</td>
                 <td>{{ strtoupper($s->method) }}</td>

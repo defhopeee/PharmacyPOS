@@ -59,7 +59,6 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->grou
     Route::resource('categories', CategoryController::class)->only($only);
     Route::resource('suppliers', SupplierController::class)->only($only);
     Route::resource('users', UserController::class)->only($only);
-    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
     Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');

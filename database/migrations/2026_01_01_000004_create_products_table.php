@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('categoryid')->nullable()->constrained('categories')->nullOnDelete();
             $table->foreignId('supplierid')->nullable()->constrained('suppliers')->nullOnDelete();
-            $table->string('barcode')->nullable()->unique();
             $table->string('description')->nullable();
             $table->decimal('price', 12, 2)->default(0);
             $table->decimal('cost', 12, 2)->default(0);

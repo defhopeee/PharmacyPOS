@@ -23,14 +23,14 @@
                     <td>
                         <div class="btn-row">
                             <button class="btn ghost sm" data-modal-open="user-modal" data-action="{{ route('owner.users.update', $u) }}" data-record='@json($record)'>Edit</button>
-                            <form method="POST" action="{{ route('owner.users.reset', $u) }}" class="ajax-form" onsubmit="return confirm('Generate a new password for {{ addslashes($u->name) }}?')">
+                            <form method="POST" action="{{ route('owner.users.reset', $u) }}" class="ajax-form" data-confirm="Generate a new password for {{ addslashes($u->name) }}?">
                                 @csrf
                                 <button class="btn ghost sm">Reset password</button>
                             </form>
                             @if($u->id !== auth()->id())
-                            <form method="POST" action="{{ route('owner.users.destroy', $u) }}" class="ajax-form" onsubmit="return confirm('Archive {{ addslashes($u->name) }}? Their sales history is kept.')">
+                            <form method="POST" action="{{ route('owner.users.destroy', $u) }}" class="ajax-form" data-confirm="Delete {{ addslashes($u->name) }}? Their past sales stay on record.">
                                 @csrf @method('DELETE')
-                                <button class="btn danger sm">Archive</button>
+                                <button class="btn danger sm">Delete</button>
                             </form>
                             @endif
                         </div>
@@ -44,34 +44,6 @@
     </div>
     <div style="padding:0 20px 16px">{{ $users->links() }}</div>
 </div>
-
-@if($archived->count())
-<div class="card" style="margin-top:18px">
-    <div class="card-head"><h3>Archived Staff</h3><span class="badge gray">{{ $archived->count() }}</span></div>
-    <div class="table-wrap">
-        <table class="data">
-            <thead><tr><th>Name</th><th>Phone</th><th>Role</th><th>Archived</th><th></th></tr></thead>
-            <tbody>
-            @foreach($archived as $u)
-                <tr>
-                    <td>{{ $u->name }}</td>
-                    <td class="muted">{{ $u->phone }}</td>
-                    <td><span class="badge gray">{{ ucfirst($u->role) }}</span></td>
-                    <td class="muted">{{ $u->deletedat?->diffForHumans() }}</td>
-                    <td>
-                        <form method="POST" action="{{ route('owner.users.restore', $u->id) }}" class="ajax-form">
-                            @csrf
-                            <button class="btn ghost sm"><x-icon name="restore" size="15" /> Restore</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-    </div>
-    <p class="muted" style="padding:0 20px 16px;font-size:.82rem">Archived staff keep their sales history. Restore re-enables their login.</p>
-</div>
-@endif
 
 <div class="modal" id="user-modal">
     <div class="modal-card">

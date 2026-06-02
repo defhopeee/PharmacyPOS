@@ -25,7 +25,7 @@
                     <td>
                         <div class="btn-row">
                             <button class="btn ghost sm" data-modal-open="supplier-modal" data-action="{{ route('owner.suppliers.update', $s) }}" data-record='@json($record)'>Edit</button>
-                            <form method="POST" action="{{ route('owner.suppliers.destroy', $s) }}" class="ajax-form" onsubmit="return confirm('Archive this supplier?')">
+                            <form method="POST" action="{{ route('owner.suppliers.destroy', $s) }}" class="ajax-form" data-confirm="Delete this supplier?">
                                 @csrf @method('DELETE')
                                 <button class="btn danger sm">Delete</button>
                             </form>

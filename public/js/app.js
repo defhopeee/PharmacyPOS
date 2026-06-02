@@ -104,6 +104,12 @@
         const form = e.target;
         if (!form.classList.contains('ajax-form')) return;
         e.preventDefault();
+
+        if (form.dataset.confirm) {
+            const ok = await customConfirm(form.dataset.confirm);
+            if (!ok) return;
+        }
+
         const btn = form.querySelector('[type="submit"]');
         const label = btn ? btn.textContent : '';
         if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
@@ -133,6 +139,28 @@
             if (btn) { btn.disabled = false; btn.textContent = label; }
         }
     });
+
+    // Styled confirmation dialog (replaces the browser's native confirm)
+    window.customConfirm = function (message) {
+        return new Promise(function (resolve) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal open';
+            overlay.innerHTML =
+                '<div class="modal-card" style="max-width:400px">' +
+                  '<div class="modal-head"><h3>Please confirm</h3></div>' +
+                  '<div class="modal-body"><p style="margin:0">' + message + '</p></div>' +
+                  '<div class="modal-foot">' +
+                    '<button class="btn ghost" type="button" data-no>Cancel</button>' +
+                    '<button class="btn danger" type="button" data-yes>Confirm</button>' +
+                  '</div>' +
+                '</div>';
+            document.body.appendChild(overlay);
+            const done = function (val) { overlay.remove(); resolve(val); };
+            overlay.querySelector('[data-yes]').addEventListener('click', () => done(true));
+            overlay.querySelector('[data-no]').addEventListener('click', () => done(false));
+            overlay.addEventListener('click', e => { if (e.target === overlay) done(false); });
+        });
+    };
 
     // One-time password reveal (staff create / reset)
     window.revealPassword = function (message, password) {

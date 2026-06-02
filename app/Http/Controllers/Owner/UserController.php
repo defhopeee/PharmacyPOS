@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -19,9 +18,7 @@ class UserController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        $archived = User::onlyTrashed()->orderBy('name')->get();
-
-        return view('owner.users.index', compact('users', 'archived', 'search'));
+        return view('owner.users.index', compact('users', 'search'));
     }
 
     public function store(Request $request)
@@ -66,30 +63,22 @@ class UserController extends Controller
     }
 
     /**
-     * Soft delete: the account is archived and its sales history is kept
-     * intact (sales stay attributed to the archived staff member).
+     * Delete a staff member. It's a soft delete under the hood, so their
+     * past sales stay on record (attributed to them) for accountability.
      */
     public function destroy(Request $request, User $user)
     {
         if ($user->id === auth()->id()) {
-            return $this->error($request, 'You cannot archive your own account.');
+            return $this->error($request, 'You cannot delete your own account.');
         }
 
         if ($user->role === 'owner' && User::where('role', 'owner')->count() <= 1) {
-            return $this->error($request, 'You cannot archive the last remaining owner.');
+            return $this->error($request, 'You cannot delete the last remaining owner.');
         }
 
         $user->delete();
 
-        return $this->respond($request, 'Staff member archived. Their sales history is preserved.');
-    }
-
-    public function restore(Request $request, int $id)
-    {
-        $user = User::onlyTrashed()->findOrFail($id);
-        $user->restore();
-
-        return $this->respond($request, 'Staff member restored.');
+        return $this->respond($request, 'Staff member deleted. Their past sales stay on record.');
     }
 
     private function generatePassword(): string

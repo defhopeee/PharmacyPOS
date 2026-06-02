@@ -24,9 +24,9 @@ class ReportController extends Controller
 
         $pdf = Pdf::loadView('owner.reports.pdf', $data)->setPaper('a4');
 
-        $name = 'pharmacypos-report-'
-            .Carbon::parse($data['from'])->format('Ymd').'-to-'
-            .Carbon::parse($data['to'])->format('Ymd').'.pdf';
+        $name = 'PharmacyPOS Sales Report '
+            .Carbon::parse($data['from'])->format('d M Y').' to '
+            .Carbon::parse($data['to'])->format('d M Y').'.pdf';
 
         return $pdf->download($name);
     }

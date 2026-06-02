@@ -16,12 +16,7 @@ class ProductController extends Controller
         $categoryid = $request->integer('categoryid');
 
         $products = Product::with(['category', 'supplier'])
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('barcode', 'like', "%{$search}%");
-                });
-            })
+            ->when($search, fn ($query) => $query->where('name', 'like', "%{$search}%"))
             ->when($categoryid, fn ($q) => $q->where('categoryid', $categoryid))
             ->orderBy('name')
             ->paginate(12)
@@ -72,7 +67,6 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'categoryid' => ['nullable', 'exists:categories,id'],
             'supplierid' => ['nullable', 'exists:suppliers,id'],
-            'barcode' => ['nullable', 'string', 'max:100', 'unique:products,barcode'.($ignore ? ",{$ignore}" : '')],
             'description' => ['nullable', 'string', 'max:1000'],
             'price' => ['required', 'numeric', 'min:0'],
             'cost' => ['required', 'numeric', 'min:0'],

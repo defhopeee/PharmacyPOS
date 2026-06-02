@@ -94,7 +94,7 @@
 </div>
 
 <div class="card" style="margin-top:18px">
-    <div class="card-head"><h3>Transaction Log — who sold what, when</h3><span class="muted" style="font-size:.8rem">Latest {{ $log->count() }}</span></div>
+    <div class="card-head"><h3>Transaction Log: who sold what, when</h3><span class="muted" style="font-size:.8rem">Latest {{ $log->count() }}</span></div>
     <div class="table-wrap">
         <table class="data">
             <thead><tr><th>Date &amp; Time</th><th>Reference</th><th>Sold by</th><th>Items</th><th class="num">Total</th><th>Method</th></tr></thead>
