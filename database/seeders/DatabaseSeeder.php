@@ -131,7 +131,6 @@ class DatabaseSeeder extends Seeder
         $attendants = User::where('role', 'attendant')->get();
         $products = Product::all();
         $methods = ['cash', 'card', 'mpesa'];
-        $customers = ['Walk-in', 'James Kamau', 'Mary Wanjiru', 'Peter Omondi', null, 'Grace Njeri'];
 
         // Spread ~40 sales across the last 14 days.
         for ($n = 0; $n < 40; $n++) {
@@ -141,26 +140,20 @@ class DatabaseSeeder extends Seeder
             $lineCount = 1 + ($n % 4);
             $picked = $products->random(min($lineCount, $products->count()));
 
-            $subtotal = 0;
+            $total = 0;
             $lines = [];
             foreach ($picked as $p) {
                 $q = 1 + ($n % 3);
                 $lineTotal = $p->price * $q;
-                $subtotal += $lineTotal;
+                $total += $lineTotal;
                 $lines[] = ['p' => $p, 'q' => $q, 'total' => $lineTotal];
             }
 
-            $discount = $n % 5 === 0 ? round($subtotal * 0.05, 2) : 0;
-            $total = $subtotal - $discount;
             $paid = ceil($total / 5) * 5; // round up to nearest 5
 
             $sale = Sale::create([
                 'reference' => 'INV-' . $when->format('ymd') . '-' . strtoupper(Str::random(5)),
                 'userid' => $attendant->id,
-                'customer' => $customers[$n % count($customers)],
-                'subtotal' => $subtotal,
-                'tax' => 0,
-                'discount' => $discount,
                 'total' => $total,
                 'paid' => $paid,
                 'balance' => $paid - $total,

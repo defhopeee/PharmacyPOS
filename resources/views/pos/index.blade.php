@@ -13,7 +13,7 @@
     ]);
 @endphp
 
-<div class="pos" style="margin:-26px">
+<div class="pos" style="margin:-20px">
     <section class="catalog">
         <div class="pos-search">
             <input type="text" id="search" placeholder="Search products by name or scan barcode…" autofocus>
@@ -36,26 +36,15 @@
             <div class="empty-cart">No items yet. Tap a product to add it.</div>
         </div>
         <div class="cart-foot">
-            <div class="sumrow"><span>Subtotal</span><span id="subtotal">KSh 0.00</span></div>
-            <div class="pay-grid">
-                <div>
-                    <label class="muted" style="font-size:.78rem">Discount (KSh)</label>
-                    <input type="number" id="discount" min="0" step="0.01" value="0">
-                </div>
-                <div>
-                    <label class="muted" style="font-size:.78rem">Tax (KSh)</label>
-                    <input type="number" id="tax" min="0" step="0.01" value="0">
-                </div>
-            </div>
             <div class="sumrow total"><span>Total</span><span id="total">KSh 0.00</span></div>
             <div class="pay-grid">
                 <div>
-                    <label class="muted" style="font-size:.78rem">Customer (optional)</label>
-                    <input type="text" id="customer" placeholder="Walk-in">
+                    <label class="muted" style="font-size:.78rem">Payment Method</label>
+                    <select id="method"><option value="cash">Cash</option><option value="card">Card</option><option value="mpesa">M-Pesa</option></select>
                 </div>
                 <div>
-                    <label class="muted" style="font-size:.78rem">Method</label>
-                    <select id="method"><option value="cash">Cash</option><option value="card">Card</option><option value="mpesa">M-Pesa</option></select>
+                    <label class="muted" style="font-size:.78rem">Amount Paid (KSh)</label>
+                    <input type="number" id="paid" min="0" step="0.01" value="0">
                 </div>
             </div>
             <div class="pay-grid" id="mpesarow" style="display:none">
@@ -65,17 +54,8 @@
                     @if($mpesaSimulated)<small class="muted" style="font-size:.72rem">Simulation mode — no live charge. Add Daraja keys in .env for real STK push.</small>@endif
                 </div>
             </div>
-            <div class="pay-grid">
-                <div>
-                    <label class="muted" style="font-size:.78rem">Amount Paid (KSh)</label>
-                    <input type="number" id="paid" min="0" step="0.01" value="0">
-                </div>
-                <div>
-                    <label class="muted" style="font-size:.78rem">Change</label>
-                    <input type="text" id="change" value="KSh 0.00" readonly>
-                </div>
-            </div>
-            <button class="btn primary block" id="checkout" style="margin-top:10px">Complete Sale</button>
+            <div class="sumrow"><span class="muted">Change</span><span id="change">KSh 0.00</span></div>
+            <button class="btn primary block" id="checkout" style="margin-top:8px">Complete Sale</button>
         </div>
     </aside>
 </div>
@@ -165,14 +145,10 @@ function renderCart() {
 }
 
 function recalc() {
-    const subtotal = cart.reduce((s, l) => s + l.price * l.quantity, 0);
-    const discount = parseFloat(document.getElementById('discount').value) || 0;
-    const tax = parseFloat(document.getElementById('tax').value) || 0;
-    const total = Math.max(0, subtotal - discount + tax);
+    const total = cart.reduce((s, l) => s + l.price * l.quantity, 0);
     const paid = parseFloat(document.getElementById('paid').value) || 0;
-    document.getElementById('subtotal').textContent = fmt(subtotal);
     document.getElementById('total').textContent = fmt(total);
-    document.getElementById('change').value = fmt(Math.max(0, paid - total));
+    document.getElementById('change').textContent = fmt(Math.max(0, paid - total));
 }
 
 function toast(msg) {
@@ -183,10 +159,7 @@ function toast(msg) {
 }
 
 function cartTotal() {
-    const subtotal = cart.reduce((s, l) => s + l.price * l.quantity, 0);
-    const discount = parseFloat(document.getElementById('discount').value) || 0;
-    const tax = parseFloat(document.getElementById('tax').value) || 0;
-    return Math.max(0, subtotal - discount + tax);
+    return cart.reduce((s, l) => s + l.price * l.quantity, 0);
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -240,9 +213,6 @@ async function checkout() {
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
             body: JSON.stringify({
                 items: cart.map(l => ({ id: l.id, quantity: l.quantity })),
-                customer: document.getElementById('customer').value,
-                discount: parseFloat(document.getElementById('discount').value) || 0,
-                tax: parseFloat(document.getElementById('tax').value) || 0,
                 paid: paid,
                 method: method,
                 mpesareceipt: mpesareceipt,
@@ -278,7 +248,7 @@ document.getElementById('cattabs').addEventListener('click', e => {
     activeCat = e.target.dataset.cat;
     renderProducts();
 });
-['discount', 'tax', 'paid'].forEach(id => document.getElementById(id).addEventListener('input', recalc));
+document.getElementById('paid').addEventListener('input', recalc);
 document.getElementById('clearcart').addEventListener('click', () => { cart.length = 0; renderCart(); });
 document.getElementById('checkout').addEventListener('click', checkout);
 

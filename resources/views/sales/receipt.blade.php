@@ -15,15 +15,11 @@
     <div class="r-line"><span>Receipt</span><span>{{ $sale->reference }}</span></div>
     <div class="r-line"><span>Date</span><span>{{ $sale->createdat->format('d M Y H:i') }}</span></div>
     <div class="r-line"><span>Served by</span><span>{{ $sale->user->name ?? '—' }}</span></div>
-    <div class="r-line"><span>Customer</span><span>{{ $sale->customer ?? 'Walk-in' }}</span></div>
     <hr>
     @foreach($sale->items as $it)
         <div class="r-line"><span>{{ $it->name }} x{{ $it->quantity }}</span><span>{{ money($it->total) }}</span></div>
     @endforeach
     <hr>
-    <div class="r-line"><span>Subtotal</span><span>{{ money($sale->subtotal) }}</span></div>
-    <div class="r-line"><span>Discount</span><span>-{{ money($sale->discount) }}</span></div>
-    <div class="r-line"><span>Tax</span><span>{{ money($sale->tax) }}</span></div>
     <div class="r-line" style="font-weight:800;font-size:1rem"><span>TOTAL</span><span>{{ money($sale->total) }}</span></div>
     <div class="r-line"><span>Paid ({{ strtoupper($sale->method) }})</span><span>{{ money($sale->paid) }}</span></div>
     @if($sale->mpesareceipt)<div class="r-line"><span>M-Pesa Ref</span><span>{{ $sale->mpesareceipt }}</span></div>@endif

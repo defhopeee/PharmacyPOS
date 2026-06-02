@@ -35,7 +35,7 @@
 
 <div class="grid cols-3" style="margin-top:18px">
     <div class="card" style="grid-column: span 2">
-        <div class="card-head"><h3>Sales — last 7 days</h3></div>
+        <div class="card-head"><h3>Sales this week</h3><a class="btn ghost sm" href="{{ route('owner.reports.index') }}">View reports</a></div>
         <div class="card-body">
             <div style="display:flex;align-items:flex-end;gap:14px;height:200px">
                 @foreach($chart as $c)
@@ -50,7 +50,7 @@
     </div>
 
     <div class="card">
-        <div class="card-head"><h3>Top Products</h3></div>
+        <div class="card-head"><h3>Top Products</h3><a class="btn ghost sm" href="{{ route('owner.reports.index') }}">View all</a></div>
         <div class="card-body">
             @forelse($topproducts as $tp)
                 <div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--line)">
@@ -66,7 +66,7 @@
 
 <div class="grid cols-2" style="margin-top:18px">
     <div class="card">
-        <div class="card-head"><h3>Low Stock Alerts</h3><span class="badge red">{{ $lowstock->count() }}</span></div>
+        <div class="card-head"><h3>Low Stock Alerts</h3><a class="btn ghost sm" href="{{ route('owner.products.index') }}">View all</a></div>
         <div class="table-wrap">
             <table class="data">
                 <thead><tr><th>Product</th><th class="num">In stock</th><th class="num">Reorder at</th></tr></thead>
@@ -82,7 +82,7 @@
     </div>
 
     <div class="card">
-        <div class="card-head"><h3>Expiring Soon (30 days)</h3><span class="badge amber">{{ $expiring->count() }}</span></div>
+        <div class="card-head"><h3>Expiring Soon (30 days)</h3><a class="btn ghost sm" href="{{ route('owner.products.index') }}">View all</a></div>
         <div class="table-wrap">
             <table class="data">
                 <thead><tr><th>Product</th><th>Expiry</th><th class="num">Qty</th></tr></thead>
@@ -102,20 +102,19 @@
     <div class="card-head"><h3>Recent Sales</h3><a class="btn ghost sm" href="{{ route('sales.index') }}">View all</a></div>
     <div class="table-wrap">
         <table class="data">
-            <thead><tr><th>Reference</th><th>Attendant</th><th>Customer</th><th>Method</th><th class="num">Total</th><th>When</th><th></th></tr></thead>
+            <thead><tr><th>Reference</th><th>Served by</th><th>Method</th><th class="num">Total</th><th>When</th><th></th></tr></thead>
             <tbody>
             @forelse($recentsales as $s)
                 <tr>
                     <td><strong>{{ $s->reference }}</strong></td>
                     <td>{{ $s->user->name ?? '—' }}</td>
-                    <td>{{ $s->customer ?? 'Walk-in' }}</td>
                     <td><span class="badge gray">{{ strtoupper($s->method) }}</span></td>
                     <td class="num">{{ money($s->total) }}</td>
                     <td class="muted">{{ $s->createdat->diffForHumans() }}</td>
                     <td><a class="btn ghost sm" href="{{ route('sales.show', $s) }}">View</a></td>
                 </tr>
             @empty
-                <tr><td colspan="7" class="muted">No sales yet.</td></tr>
+                <tr><td colspan="6" class="muted">No sales yet.</td></tr>
             @endforelse
             </tbody>
         </table>

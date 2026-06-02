@@ -63,9 +63,10 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // Sales for the last 7 days for the chart.
-        $chart = collect(range(6, 0))->map(function ($i) {
-            $day = Carbon::today()->subDays($i);
+        // Sales for the current week (Monday -> Sunday) for the chart.
+        $weekstart = Carbon::today()->startOfWeek(Carbon::MONDAY);
+        $chart = collect(range(0, 6))->map(function ($i) use ($weekstart) {
+            $day = $weekstart->copy()->addDays($i);
             return [
                 'label' => $day->format('D'),
                 'total' => (float) Sale::whereDate('createdat', $day)->sum('total'),

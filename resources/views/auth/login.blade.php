@@ -35,11 +35,17 @@
                 @csrf
                 <div class="field">
                     <label for="email">Email address</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="you@gmail.com">
+                    <div class="input-icon">
+                        <span class="ii"><x-icon name="mail" size="17" /></span>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="you@gmail.com">
+                    </div>
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+                    <div class="input-icon">
+                        <span class="ii"><x-icon name="lock" size="17" /></span>
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+                    </div>
                 </div>
                 <div class="field" style="display:flex;align-items:center;gap:8px">
                     <input type="checkbox" id="remember" name="remember" style="width:auto">

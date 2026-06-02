@@ -12,10 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('reference')->unique();
             $table->foreignId('userid')->constrained('users')->cascadeOnDelete();
-            $table->string('customer')->nullable();
-            $table->decimal('subtotal', 12, 2)->default(0);
-            $table->decimal('tax', 12, 2)->default(0);
-            $table->decimal('discount', 12, 2)->default(0);
             $table->decimal('total', 12, 2)->default(0);
             $table->decimal('paid', 12, 2)->default(0);
             $table->decimal('balance', 12, 2)->default(0);

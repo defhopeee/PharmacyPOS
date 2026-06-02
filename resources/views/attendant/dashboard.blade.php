@@ -35,19 +35,18 @@
     <div class="card-head"><h3>My Recent Sales</h3><a class="btn ghost sm" href="{{ route('sales.index') }}">View all</a></div>
     <div class="table-wrap">
         <table class="data">
-            <thead><tr><th>Reference</th><th>Customer</th><th>Method</th><th class="num">Total</th><th>When</th><th></th></tr></thead>
+            <thead><tr><th>Reference</th><th>Method</th><th class="num">Total</th><th>When</th><th></th></tr></thead>
             <tbody>
             @forelse($myrecent as $s)
                 <tr>
                     <td><strong>{{ $s->reference }}</strong></td>
-                    <td>{{ $s->customer ?? 'Walk-in' }}</td>
                     <td><span class="badge gray">{{ strtoupper($s->method) }}</span></td>
                     <td class="num">{{ money($s->total) }}</td>
                     <td class="muted">{{ $s->createdat->diffForHumans() }}</td>
                     <td><a class="btn ghost sm" href="{{ route('sales.show', $s) }}">View</a></td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="muted">You haven't made any sales yet today.</td></tr>
+                <tr><td colspan="5" class="muted">You haven't made any sales yet today.</td></tr>
             @endforelse
             </tbody>
         </table>

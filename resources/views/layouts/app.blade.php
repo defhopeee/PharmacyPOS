@@ -45,7 +45,7 @@
     <div class="main">
         <header class="topbar">
             <div style="display:flex;align-items:center;gap:14px">
-                <button class="btn ghost sm no-print" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none" id="menubtn"><x-icon name="menu" /></button>
+                <button class="btn ghost sm no-print" id="menubtn" aria-label="Menu"><x-icon name="menu" /></button>
                 <span class="page-title">@yield('title', 'Dashboard')</span>
             </div>
             <div class="actions">
@@ -57,13 +57,13 @@
                     <div class="bell-menu" id="bellmenu">
                         <div class="bm-head">Notifications ({{ $notifcount }})</div>
                         @forelse($notifications as $n)
-                            <div class="bell-item {{ $n['type'] }}">
+                            <a class="bell-item {{ $n['type'] }}" href="{{ $n['url'] }}">
                                 <span class="bi-ic"><x-icon name="{{ $n['icon'] }}" size="16" /></span>
                                 <div>
                                     <div class="bi-t">{{ $n['title'] }}</div>
                                     <div class="bi-m">{{ $n['meta'] }}</div>
                                 </div>
-                            </div>
+                            </a>
                         @empty
                             <div class="bell-empty">All good — no alerts right now.</div>
                         @endforelse
@@ -94,9 +94,22 @@
         </main>
     </div>
 </div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
 <script>
-    if (window.innerWidth <= 980) { document.getElementById('menubtn').style.display = 'inline-flex'; }
+    // Mobile sidebar toggle
+    (function () {
+        const sb = document.getElementById('sidebar');
+        const bd = document.getElementById('sidebarBackdrop');
+        const btn = document.getElementById('menubtn');
+        function toggle(open) {
+            sb.classList.toggle('open', open);
+            bd.classList.toggle('open', open);
+        }
+        if (btn) btn.addEventListener('click', () => toggle(!sb.classList.contains('open')));
+        if (bd) bd.addEventListener('click', () => toggle(false));
+        sb.querySelectorAll('.nav a').forEach(a => a.addEventListener('click', () => toggle(false)));
+    })();
     // Notifications bell toggle
     (function () {
         const btn = document.getElementById('bellbtn');

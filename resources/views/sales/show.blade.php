@@ -10,8 +10,7 @@
     <div class="card-body">
         <div class="grid cols-2" style="margin-bottom:18px">
             <div>
-                <p class="mb0 muted">Attendant</p><strong>{{ $sale->user->name ?? '—' }}</strong>
-                <p class="mb0 muted" style="margin-top:10px">Customer</p><strong>{{ $sale->customer ?? 'Walk-in' }}</strong>
+                <p class="mb0 muted">Served by</p><strong>{{ $sale->user->name ?? '—' }}</strong>
             </div>
             <div>
                 <p class="mb0 muted">Date</p><strong>{{ $sale->createdat->format('d M Y, H:i') }}</strong>
@@ -32,9 +31,6 @@
         </div>
 
         <div style="max-width:280px;margin-left:auto;margin-top:18px">
-            <div class="sumrow"><span class="muted">Subtotal</span><span>{{ money($sale->subtotal) }}</span></div>
-            <div class="sumrow"><span class="muted">Discount</span><span>-{{ money($sale->discount) }}</span></div>
-            <div class="sumrow"><span class="muted">Tax</span><span>{{ money($sale->tax) }}</span></div>
             <div class="sumrow total"><span>Total</span><span>{{ money($sale->total) }}</span></div>
             <div class="sumrow"><span class="muted">Paid</span><span>{{ money($sale->paid) }}</span></div>
             <div class="sumrow"><span class="muted">Change</span><span>{{ money($sale->balance) }}</span></div>

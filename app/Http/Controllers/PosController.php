@@ -61,16 +61,13 @@ class PosController extends Controller
             'items' => ['required', 'array', 'min:1'],
             'items.*.id' => ['required', 'integer', 'exists:products,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1'],
-            'customer' => ['nullable', 'string', 'max:255'],
-            'discount' => ['nullable', 'numeric', 'min:0'],
-            'tax' => ['nullable', 'numeric', 'min:0'],
             'paid' => ['required', 'numeric', 'min:0'],
             'method' => ['required', 'in:cash,card,mpesa'],
             'mpesareceipt' => ['nullable', 'string', 'max:50'],
         ]);
 
         $sale = DB::transaction(function () use ($data, $request) {
-            $subtotal = 0;
+            $total = 0;
             $lines = [];
 
             foreach ($data['items'] as $item) {
@@ -84,7 +81,7 @@ class PosController extends Controller
                 }
 
                 $linetotal = $product->price * $item['quantity'];
-                $subtotal += $linetotal;
+                $total += $linetotal;
 
                 $lines[] = [
                     'product' => $product,
@@ -93,10 +90,6 @@ class PosController extends Controller
                     'total' => $linetotal,
                 ];
             }
-
-            $discount = (float) ($data['discount'] ?? 0);
-            $tax = (float) ($data['tax'] ?? 0);
-            $total = max(0, $subtotal - $discount + $tax);
 
             if ($data['paid'] < $total) {
                 throw ValidationException::withMessages([
@@ -107,10 +100,6 @@ class PosController extends Controller
             $sale = Sale::create([
                 'reference' => $this->reference(),
                 'userid' => $request->user()->id,
-                'customer' => $data['customer'] ?? null,
-                'subtotal' => $subtotal,
-                'tax' => $tax,
-                'discount' => $discount,
                 'total' => $total,
                 'paid' => $data['paid'],
                 'balance' => $data['paid'] - $total,

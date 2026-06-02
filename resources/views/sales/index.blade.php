@@ -12,13 +12,12 @@
     </div>
     <div class="table-wrap">
         <table class="data">
-            <thead><tr><th>Reference</th><th>Attendant</th><th>Customer</th><th>Method</th><th class="num">Items</th><th class="num">Total</th><th>Date</th><th></th></tr></thead>
+            <thead><tr><th>Reference</th><th>Served by</th><th>Method</th><th class="num">Items</th><th class="num">Total</th><th>Date</th><th></th></tr></thead>
             <tbody>
             @forelse($sales as $s)
                 <tr>
                     <td><strong>{{ $s->reference }}</strong></td>
                     <td>{{ $s->user->name ?? '—' }}</td>
-                    <td>{{ $s->customer ?? 'Walk-in' }}</td>
                     <td><span class="badge gray">{{ strtoupper($s->method) }}</span></td>
                     <td class="num">{{ $s->items()->count() }}</td>
                     <td class="num">{{ money($s->total) }}</td>
@@ -31,7 +30,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="8" class="muted">No sales recorded.</td></tr>
+                <tr><td colspan="7" class="muted">No sales recorded.</td></tr>
             @endforelse
             </tbody>
         </table>

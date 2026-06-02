@@ -32,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
                 ->orderBy('expiry')
                 ->get(['id', 'name', 'expiry']);
 
+            // Owners manage stock; attendants can only reach the POS.
+            $isOwner = optional(auth()->user())->isOwner();
+            $stockUrl = $isOwner ? route('owner.products.index') : route('pos.index');
+
             $notifications = [];
 
             foreach ($lowstock as $p) {
@@ -40,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
                     'icon' => 'package',
                     'title' => $p->quantity == 0 ? "{$p->name} is out of stock" : "{$p->name} is running low",
                     'meta' => "{$p->quantity} left (reorder at {$p->reorder})",
+                    'url' => $isOwner ? $stockUrl.'?search='.urlencode($p->name) : $stockUrl,
                 ];
             }
 
@@ -50,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
                     'icon' => 'alert',
                     'title' => $expired ? "{$p->name} has expired" : "{$p->name} expires soon",
                     'meta' => $p->expiry->format('d M Y'),
+                    'url' => $isOwner ? $stockUrl.'?search='.urlencode($p->name) : $stockUrl,
                 ];
             }
 
