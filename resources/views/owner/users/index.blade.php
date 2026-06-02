@@ -12,19 +12,21 @@
     </div>
     <div class="table-wrap">
         <table class="data">
-            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Name</th><th>Phone</th><th>Role</th><th></th></tr></thead>
             <tbody>
             @forelse($users as $u)
-                @php $record = ['name' => $u->name, 'email' => $u->email, 'phone' => $u->phone, 'role' => $u->role, 'active' => (bool) $u->active]; @endphp
+                @php $record = ['name' => $u->name, 'phone' => $u->phone, 'role' => $u->role]; @endphp
                 <tr>
                     <td><strong>{{ $u->name }}</strong></td>
-                    <td>{{ $u->email }}</td>
-                    <td>{{ $u->phone ?? '—' }}</td>
+                    <td>{{ $u->phone }}</td>
                     <td><span class="badge {{ $u->role === 'owner' ? 'teal' : 'gray' }}">{{ ucfirst($u->role) }}</span></td>
-                    <td>@if($u->active)<span class="badge green">Active</span>@else<span class="badge red">Disabled</span>@endif</td>
                     <td>
                         <div class="btn-row">
                             <button class="btn ghost sm" data-modal-open="user-modal" data-action="{{ route('owner.users.update', $u) }}" data-record='@json($record)'>Edit</button>
+                            <form method="POST" action="{{ route('owner.users.reset', $u) }}" class="ajax-form" onsubmit="return confirm('Generate a new password for {{ addslashes($u->name) }}?')">
+                                @csrf
+                                <button class="btn ghost sm">Reset password</button>
+                            </form>
                             @if($u->id !== auth()->id())
                             <form method="POST" action="{{ route('owner.users.destroy', $u) }}" class="ajax-form" onsubmit="return confirm('Archive {{ addslashes($u->name) }}? Their sales history is kept.')">
                                 @csrf @method('DELETE')
@@ -35,7 +37,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="muted">No staff yet.</td></tr>
+                <tr><td colspan="4" class="muted">No staff yet.</td></tr>
             @endforelse
             </tbody>
         </table>
@@ -48,12 +50,12 @@
     <div class="card-head"><h3>Archived Staff</h3><span class="badge gray">{{ $archived->count() }}</span></div>
     <div class="table-wrap">
         <table class="data">
-            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Archived</th><th></th></tr></thead>
+            <thead><tr><th>Name</th><th>Phone</th><th>Role</th><th>Archived</th><th></th></tr></thead>
             <tbody>
             @foreach($archived as $u)
                 <tr>
                     <td>{{ $u->name }}</td>
-                    <td class="muted">{{ $u->email }}</td>
+                    <td class="muted">{{ $u->phone }}</td>
                     <td><span class="badge gray">{{ ucfirst($u->role) }}</span></td>
                     <td class="muted">{{ $u->deletedat?->diffForHumans() }}</td>
                     <td>
@@ -79,10 +81,7 @@
             <div class="modal-body">
                 <div class="field"><label>Full Name *</label><input type="text" name="name" required></div>
                 <div class="form-grid">
-                    <div class="field"><label>Email *</label><input type="email" name="email" required autocomplete="off"></div>
-                    <div class="field"><label>Phone</label><input type="text" name="phone"></div>
-                </div>
-                <div class="form-grid">
+                    <div class="field"><label>Phone Number *</label><input type="tel" name="phone" placeholder="0712345678" required></div>
                     <div class="field">
                         <label>Role *</label>
                         <select name="role" required>
@@ -90,16 +89,8 @@
                             <option value="owner">Owner</option>
                         </select>
                     </div>
-                    <div class="field">
-                        <label>Status</label><br>
-                        <label class="switch"><input type="checkbox" name="active" value="1" checked><span class="track"></span> <span>Active</span></label>
-                    </div>
                 </div>
-                <div class="form-grid">
-                    <div class="field"><label>Password</label><input type="password" name="password" autocomplete="new-password" placeholder="Required for new staff"></div>
-                    <div class="field"><label>Confirm Password</label><input type="password" name="password_confirmation" autocomplete="new-password"></div>
-                </div>
-                <p class="muted" style="font-size:.8rem;margin:0">Min 8 chars with upper &amp; lower case, a number and a symbol. Leave blank when editing to keep the current password.</p>
+                <p class="muted" style="font-size:.8rem;margin:0">A secure password is generated automatically and shown to you once when you save — write it down and give it to the staff member. They sign in with their phone number and that password.</p>
             </div>
             <div class="modal-foot">
                 <button class="btn ghost" data-modal-close type="button">Cancel</button>

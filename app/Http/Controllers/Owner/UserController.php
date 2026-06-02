@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -14,7 +14,7 @@ class UserController extends Controller
         $search = $request->string('search')->toString();
 
         $users = User::when($search, fn ($q) => $q->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%"))
+                ->orWhere('phone', 'like', "%{$search}%"))
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
@@ -28,39 +28,41 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:50'],
+            'phone' => ['required', 'string', 'max:30', 'unique:users,phone'],
             'role' => ['required', 'in:owner,attendant'],
-            'active' => ['nullable', 'boolean'],
-            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
         ]);
 
-        $data['active'] = $request->boolean('active', true);
+        $password = $this->generatePassword();
+        $data['phone'] = $this->normalisePhone($data['phone']);
+        $data['password'] = $password;
         User::create($data);
 
-        return $this->respond($request, 'Staff member created.');
+        return $this->respond($request, "Staff member created. Temporary password for {$data['name']}:", $password);
     }
 
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'phone' => ['nullable', 'string', 'max:50'],
+            'phone' => ['required', 'string', 'max:30', 'unique:users,phone,'.$user->id],
             'role' => ['required', 'in:owner,attendant'],
-            'active' => ['nullable', 'boolean'],
-            'password' => ['nullable', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
         ]);
 
-        $data['active'] = $request->boolean('active');
-
-        if (empty($data['password'])) {
-            unset($data['password']);
-        }
-
+        $data['phone'] = $this->normalisePhone($data['phone']);
         $user->update($data);
 
         return $this->respond($request, 'Staff member updated.');
+    }
+
+    /**
+     * Generate a fresh password for a staff member and reveal it once.
+     */
+    public function resetPassword(Request $request, User $user)
+    {
+        $password = $this->generatePassword();
+        $user->update(['password' => $password]);
+
+        return $this->respond($request, "New password for {$user->name}:", $password);
     }
 
     /**
@@ -70,19 +72,11 @@ class UserController extends Controller
     public function destroy(Request $request, User $user)
     {
         if ($user->id === auth()->id()) {
-            $msg = 'You cannot archive your own account.';
-
-            return $request->wantsJson()
-                ? response()->json(['message' => $msg], 422)
-                : redirect()->route('owner.users.index')->with('error', $msg);
+            return $this->error($request, 'You cannot archive your own account.');
         }
 
         if ($user->role === 'owner' && User::where('role', 'owner')->count() <= 1) {
-            $msg = 'You cannot archive the last remaining owner.';
-
-            return $request->wantsJson()
-                ? response()->json(['message' => $msg], 422)
-                : redirect()->route('owner.users.index')->with('error', $msg);
+            return $this->error($request, 'You cannot archive the last remaining owner.');
         }
 
         $user->delete();
@@ -98,12 +92,34 @@ class UserController extends Controller
         return $this->respond($request, 'Staff member restored.');
     }
 
-    private function respond(Request $request, string $message)
+    private function generatePassword(): string
+    {
+        // Readable but strong: e.g. "Med-7K9Q>m"
+        return 'Med-'.Str::password(8, letters: true, numbers: true, symbols: true);
+    }
+
+    private function normalisePhone(string $phone): string
+    {
+        return preg_replace('/\s+/', '', $phone);
+    }
+
+    private function respond(Request $request, string $message, ?string $password = null)
     {
         if ($request->wantsJson()) {
-            return response()->json(['message' => $message]);
+            return response()->json(array_filter([
+                'message' => $message,
+                'password' => $password,
+            ], fn ($v) => $v !== null));
         }
 
-        return redirect()->route('owner.users.index')->with('status', $message);
+        return redirect()->route('owner.users.index')
+            ->with('status', $message.($password ? ' '.$password : ''));
+    }
+
+    private function error(Request $request, string $message)
+    {
+        return $request->wantsJson()
+            ? response()->json(['message' => $message], 422)
+            : redirect()->route('owner.users.index')->with('error', $message);
     }
 }

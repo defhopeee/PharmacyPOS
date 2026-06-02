@@ -14,8 +14,8 @@
                 <input type="date" name="to" value="{{ \Illuminate\Support\Carbon::parse($to)->format('Y-m-d') }}">
             </div>
             <button class="btn primary">Apply</button>
-            <button class="btn ghost no-print" type="button" onclick="window.print()"><x-icon name="printer" size="16" /> Print</button>
-            <a class="btn ghost no-print" href="{{ route('owner.backup') }}"><x-icon name="download" size="16" /> Backup Database</a>
+            <a class="btn ghost" href="{{ route('owner.reports.pdf', request()->only('from', 'to')) }}"><x-icon name="download" size="16" /> Download PDF</a>
+            <a class="btn ghost" href="{{ route('owner.backup') }}"><x-icon name="download" size="16" /> Backup Database</a>
         </form>
     </div>
 </div>
@@ -60,16 +60,56 @@
     </div>
 </div>
 
+<div class="grid cols-2" style="margin-top:18px">
+    <div class="card">
+        <div class="card-head"><h3>Sales by Staff</h3></div>
+        <div class="table-wrap">
+            <table class="data">
+                <thead><tr><th>Staff</th><th class="num">Orders</th><th class="num">Total</th></tr></thead>
+                <tbody>
+                @forelse($bystaff as $r)
+                    <tr><td>{{ $r->user->name ?? '—' }}</td><td class="num">{{ $r->orders }}</td><td class="num">{{ money($r->total) }}</td></tr>
+                @empty
+                    <tr><td colspan="3" class="muted">No data in this range.</td></tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-head"><h3>Daily Breakdown</h3></div>
+        <div class="table-wrap">
+            <table class="data">
+                <thead><tr><th>Date</th><th class="num">Orders</th><th class="num">Total</th></tr></thead>
+                <tbody>
+                @forelse($byday as $d)
+                    <tr><td>{{ \Illuminate\Support\Carbon::parse($d->day)->format('d M Y') }}</td><td class="num">{{ $d->orders }}</td><td class="num">{{ money($d->total) }}</td></tr>
+                @empty
+                    <tr><td colspan="3" class="muted">No sales in this range.</td></tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <div class="card" style="margin-top:18px">
-    <div class="card-head"><h3>Daily Breakdown</h3></div>
+    <div class="card-head"><h3>Transaction Log — who sold what, when</h3><span class="muted" style="font-size:.8rem">Latest {{ $log->count() }}</span></div>
     <div class="table-wrap">
         <table class="data">
-            <thead><tr><th>Date</th><th class="num">Orders</th><th class="num">Total</th></tr></thead>
+            <thead><tr><th>Date &amp; Time</th><th>Reference</th><th>Sold by</th><th>Items</th><th class="num">Total</th><th>Method</th></tr></thead>
             <tbody>
-            @forelse($byday as $d)
-                <tr><td>{{ \Illuminate\Support\Carbon::parse($d->day)->format('d M Y') }}</td><td class="num">{{ $d->orders }}</td><td class="num">{{ money($d->total) }}</td></tr>
+            @forelse($log as $s)
+                <tr>
+                    <td class="muted">{{ $s->createdat->format('d M Y, H:i') }}</td>
+                    <td><strong>{{ $s->reference }}</strong></td>
+                    <td>{{ $s->user->name ?? '—' }}</td>
+                    <td class="muted">{{ \Illuminate\Support\Str::limit($s->items->map(fn($i) => $i->name.' x'.$i->quantity)->implode(', '), 60) }}</td>
+                    <td class="num">{{ money($s->total) }}</td>
+                    <td><span class="badge gray">{{ strtoupper($s->method) }}</span></td>
+                </tr>
             @empty
-                <tr><td colspan="3" class="muted">No sales in this range.</td></tr>
+                <tr><td colspan="6" class="muted">No transactions in this range.</td></tr>
             @endforelse
             </tbody>
         </table>

@@ -31,16 +31,16 @@ class DatabaseSeeder extends Seeder
     private function seedUsers(): void
     {
         $users = [
-            ['name' => 'Diana Mwangi', 'email' => 'dianamwangi@gmail.com', 'role' => 'owner', 'phone' => '+254 712 345 678'],
-            ['name' => 'Alex Otieno', 'email' => 'alexotieno@gmail.com', 'role' => 'attendant', 'phone' => '+254 722 123 456'],
-            ['name' => 'Brenda Achieng', 'email' => 'brendaachieng@gmail.com', 'role' => 'attendant', 'phone' => '+254 701 987 654'],
-            ['name' => 'Caleb Kimani', 'email' => 'calebkimani@gmail.com', 'role' => 'attendant', 'phone' => '+254 733 456 789'],
+            ['name' => 'Diana Mwangi', 'phone' => '0712345678', 'role' => 'owner'],
+            ['name' => 'Alex Otieno', 'phone' => '0722123456', 'role' => 'attendant'],
+            ['name' => 'Brenda Achieng', 'phone' => '0701987654', 'role' => 'attendant'],
+            ['name' => 'Caleb Kimani', 'phone' => '0733456789', 'role' => 'attendant'],
         ];
 
         foreach ($users as $u) {
             User::updateOrCreate(
-                ['email' => $u['email']],
-                array_merge($u, ['password' => self::PASSWORD, 'active' => true])
+                ['phone' => $u['phone']],
+                array_merge($u, ['password' => self::PASSWORD])
             );
         }
     }

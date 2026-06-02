@@ -17,16 +17,17 @@
             <img src="{{ asset('images/logo.svg') }}" alt="PharmacyPOS" style="width:34px;height:34px;border-radius:9px"> {{ config('app.name') }}
         </div>
 
-        <div class="role-pill">{{ $owner ? 'Owner Workspace' : 'Attendant Workspace' }}</div>
         <ul class="nav">
+            <div class="role-pill">Main</div>
             <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"><span class="ic"><x-icon name="grid" /></span> Dashboard</a></li>
             <li><a href="{{ route('pos.index') }}" class="{{ request()->routeIs('pos.*') ? 'active' : '' }}"><span class="ic"><x-icon name="cart" /></span> Point of Sale</a></li>
             <li><a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.*') ? 'active' : '' }}"><span class="ic"><x-icon name="receipt" /></span> Sales</a></li>
             @if($owner)
-                <div class="role-pill">Management</div>
-                <li><a href="{{ route('owner.products.index') }}" class="{{ request()->routeIs('owner.products.*') ? 'active' : '' }}"><span class="ic"><x-icon name="package" /></span> Products</a></li>
-                <li><a href="{{ route('owner.categories.index') }}" class="{{ request()->routeIs('owner.categories.*') ? 'active' : '' }}"><span class="ic"><x-icon name="folder" /></span> Categories</a></li>
+                <div class="role-pill">Inventory</div>
                 <li><a href="{{ route('owner.suppliers.index') }}" class="{{ request()->routeIs('owner.suppliers.*') ? 'active' : '' }}"><span class="ic"><x-icon name="truck" /></span> Suppliers</a></li>
+                <li><a href="{{ route('owner.categories.index') }}" class="{{ request()->routeIs('owner.categories.*') ? 'active' : '' }}"><span class="ic"><x-icon name="folder" /></span> Categories</a></li>
+                <li><a href="{{ route('owner.products.index') }}" class="{{ request()->routeIs('owner.products.*') ? 'active' : '' }}"><span class="ic"><x-icon name="package" /></span> Products</a></li>
+                <div class="role-pill">Management</div>
                 <li><a href="{{ route('owner.users.index') }}" class="{{ request()->routeIs('owner.users.*') ? 'active' : '' }}"><span class="ic"><x-icon name="users" /></span> Staff</a></li>
                 <li><a href="{{ route('owner.reports.index') }}" class="{{ request()->routeIs('owner.reports.*') ? 'active' : '' }}"><span class="ic"><x-icon name="trending" /></span> Reports</a></li>
             @endif
@@ -34,7 +35,7 @@
 
         <div class="foot">
             <div class="who">{{ $user->name }}</div>
-            <div class="muted">{{ $user->email }}</div>
+            <div class="muted">{{ $user->phone }} · {{ ucfirst($user->role) }}</div>
             <form method="POST" action="{{ route('logout') }}" style="margin-top:10px">
                 @csrf
                 <button class="btn ghost sm block" style="color:#cbd5e1;border-color:rgba(255,255,255,.15)"><x-icon name="logout" size="16" /> Sign out</button>
@@ -70,7 +71,6 @@
                     </div>
                 </div>
                 <span class="badge teal">{{ ucfirst($user->role) }}</span>
-                <a class="btn primary sm" href="{{ route('pos.index') }}"><x-icon name="plus" size="16" /> New Sale</a>
             </div>
         </header>
 

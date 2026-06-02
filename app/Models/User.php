@@ -18,11 +18,9 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
-        'email',
+        'phone',
         'password',
         'role',
-        'phone',
-        'active',
     ];
 
     protected $hidden = [
@@ -34,7 +32,6 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
-            'active' => 'boolean',
         ];
     }
 

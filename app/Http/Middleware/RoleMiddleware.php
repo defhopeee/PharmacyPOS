@@ -15,7 +15,7 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (! $user || ! $user->active) {
+        if (! $user) {
             abort(403, 'Your account is not allowed here.');
         }
 

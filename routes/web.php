@@ -60,8 +60,10 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->grou
     Route::resource('suppliers', SupplierController::class)->only($only);
     Route::resource('users', UserController::class)->only($only);
     Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset');
 
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('reports/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
 
     Route::get('backup', [BackupController::class, 'download'])->name('backup');
 });

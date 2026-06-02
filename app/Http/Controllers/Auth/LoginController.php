@@ -22,29 +22,24 @@ class LoginController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        // Throttle brute-force attempts: max 5 per minute per email+ip.
-        $key = strtolower($credentials['email']).'|'.$request->ip();
+        // Normalise the phone so spacing/format doesn't block a valid login.
+        $phone = preg_replace('/\s+/', '', $credentials['phone']);
+
+        // Throttle brute-force attempts: max 5 per minute per phone+ip.
+        $key = $phone.'|'.$request->ip();
         if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
             throw ValidationException::withMessages([
-                'email' => "Too many login attempts. Please try again in {$seconds} seconds.",
+                'phone' => "Too many login attempts. Please try again in {$seconds} seconds.",
             ]);
         }
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::attempt(['phone' => $phone, 'password' => $credentials['password']], $request->boolean('remember'))) {
             \Illuminate\Support\Facades\RateLimiter::clear($key);
-
-            if (! $request->user()->active) {
-                Auth::logout();
-                throw ValidationException::withMessages([
-                    'email' => 'This account has been deactivated.',
-                ]);
-            }
-
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'));
@@ -53,7 +48,7 @@ class LoginController extends Controller
         \Illuminate\Support\Facades\RateLimiter::hit($key, 60);
 
         throw ValidationException::withMessages([
-            'email' => 'These credentials do not match our records.',
+            'phone' => 'These credentials do not match our records.',
         ]);
     }
 

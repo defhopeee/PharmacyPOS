@@ -46,10 +46,10 @@
             <form method="POST" action="{{ route('login.attempt') }}">
                 @csrf
                 <div class="field">
-                    <label for="email">Email address</label>
+                    <label for="phone">Phone number</label>
                     <div class="input-icon">
-                        <span class="ii"><x-icon name="mail" size="17" /></span>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="you@gmail.com">
+                        <span class="ii"><x-icon name="phone" size="17" /></span>
+                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required autofocus autocomplete="username" placeholder="0712345678">
                     </div>
                 </div>
                 <div class="field">

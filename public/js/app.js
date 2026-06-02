@@ -122,6 +122,10 @@
             }
             if (!res.ok) throw new Error('Request failed');
             const data = await res.json().catch(() => ({}));
+            if (data.password) {
+                revealPassword(data.message || 'Password:', data.password);
+                return;
+            }
             sessionStorage.setItem('flash', data.message || 'Saved successfully.');
             window.location.reload();
         } catch (err) {
@@ -130,18 +134,56 @@
         }
     });
 
+    // One-time password reveal (staff create / reset)
+    window.revealPassword = function (message, password) {
+        const overlay = document.createElement('div');
+        overlay.className = 'modal open';
+        overlay.innerHTML =
+            '<div class="modal-card" style="max-width:420px">' +
+              '<div class="modal-head"><h3>Save this password</h3></div>' +
+              '<div class="modal-body">' +
+                '<p class="muted" style="margin-top:0">' + message + '</p>' +
+                '<div style="display:flex;gap:8px;align-items:center">' +
+                  '<code id="pwval" style="flex:1;font-size:1.1rem;font-weight:700;background:#f1f5f9;padding:10px 12px;border-radius:9px;word-break:break-all">' + password + '</code>' +
+                  '<button class="btn ghost sm" id="pwcopy" type="button">Copy</button>' +
+                '</div>' +
+                '<p class="muted" style="font-size:.8rem;margin-bottom:0">This is shown only once. Write it down and hand it to the staff member.</p>' +
+              '</div>' +
+              '<div class="modal-foot"><button class="btn primary" id="pwdone" type="button">Done</button></div>' +
+            '</div>';
+        document.body.appendChild(overlay);
+        overlay.querySelector('#pwcopy').addEventListener('click', function () {
+            navigator.clipboard && navigator.clipboard.writeText(password);
+            this.textContent = 'Copied';
+        });
+        overlay.querySelector('#pwdone').addEventListener('click', () => window.location.reload());
+    };
+
     // Show flash after reload
     const flash = sessionStorage.getItem('flash');
     if (flash) { sessionStorage.removeItem('flash'); window.toast(flash, 'success'); }
 
-    // Debounced auto-search
+    // Debounced auto-search — submit, then restore the cursor after reload
     document.querySelectorAll('form[data-autosearch] input[name="search"], form[data-autosearch] select').forEach(function (el) {
         let timer;
         const form = el.closest('form');
         const evt = el.tagName === 'SELECT' ? 'change' : 'input';
         el.addEventListener(evt, function () {
             clearTimeout(timer);
-            timer = setTimeout(() => form.submit(), el.tagName === 'SELECT' ? 0 : 350);
+            if (el.tagName === 'INPUT') sessionStorage.setItem('focusSearch', '1');
+            timer = setTimeout(() => form.submit(), el.tagName === 'SELECT' ? 0 : 500);
         });
     });
+
+    // After an auto-search reload, put the cursor back at the end of the search box
+    if (sessionStorage.getItem('focusSearch')) {
+        sessionStorage.removeItem('focusSearch');
+        const box = document.querySelector('form[data-autosearch] input[name="search"]');
+        if (box) {
+            box.focus();
+            const v = box.value;
+            box.value = '';
+            box.value = v; // moves caret to the end
+        }
+    }
 })();
