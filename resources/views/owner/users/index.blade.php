@@ -15,6 +15,7 @@
             <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Status</th><th></th></tr></thead>
             <tbody>
             @forelse($users as $u)
+                @php $record = ['name' => $u->name, 'email' => $u->email, 'phone' => $u->phone, 'role' => $u->role, 'active' => (bool) $u->active]; @endphp
                 <tr>
                     <td><strong>{{ $u->name }}</strong></td>
                     <td>{{ $u->email }}</td>
@@ -23,7 +24,7 @@
                     <td>@if($u->active)<span class="badge green">Active</span>@else<span class="badge red">Disabled</span>@endif</td>
                     <td>
                         <div class="btn-row">
-                            <button class="btn ghost sm" data-modal-open="user-modal" data-action="{{ route('owner.users.update', $u) }}" data-record='@json(['name' => $u->name, 'email' => $u->email, 'phone' => $u->phone, 'role' => $u->role, 'active' => (bool) $u->active])'>Edit</button>
+                            <button class="btn ghost sm" data-modal-open="user-modal" data-action="{{ route('owner.users.update', $u) }}" data-record='@json($record)'>Edit</button>
                             @if($u->id !== auth()->id())
                             <form method="POST" action="{{ route('owner.users.destroy', $u) }}" class="ajax-form" onsubmit="return confirm('Archive {{ addslashes($u->name) }}? Their sales history is kept.')">
                                 @csrf @method('DELETE')

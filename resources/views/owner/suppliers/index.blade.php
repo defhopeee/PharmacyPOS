@@ -15,6 +15,7 @@
             <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th class="num">Products</th><th></th></tr></thead>
             <tbody>
             @forelse($suppliers as $s)
+                @php $record = ['name' => $s->name, 'phone' => $s->phone, 'email' => $s->email, 'address' => $s->address]; @endphp
                 <tr>
                     <td><strong>{{ $s->name }}</strong></td>
                     <td>{{ $s->phone ?? '—' }}</td>
@@ -23,7 +24,7 @@
                     <td class="num">{{ $s->products_count }}</td>
                     <td>
                         <div class="btn-row">
-                            <button class="btn ghost sm" data-modal-open="supplier-modal" data-action="{{ route('owner.suppliers.update', $s) }}" data-record='@json(['name' => $s->name, 'phone' => $s->phone, 'email' => $s->email, 'address' => $s->address])'>Edit</button>
+                            <button class="btn ghost sm" data-modal-open="supplier-modal" data-action="{{ route('owner.suppliers.update', $s) }}" data-record='@json($record)'>Edit</button>
                             <form method="POST" action="{{ route('owner.suppliers.destroy', $s) }}" class="ajax-form" onsubmit="return confirm('Archive this supplier?')">
                                 @csrf @method('DELETE')
                                 <button class="btn danger sm">Delete</button>

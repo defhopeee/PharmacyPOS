@@ -15,13 +15,14 @@
             <thead><tr><th>Name</th><th>Description</th><th class="num">Products</th><th></th></tr></thead>
             <tbody>
             @forelse($categories as $c)
+                @php $record = ['name' => $c->name, 'description' => $c->description]; @endphp
                 <tr>
                     <td><strong>{{ $c->name }}</strong></td>
                     <td class="muted">{{ $c->description ?? '—' }}</td>
                     <td class="num">{{ $c->products_count }}</td>
                     <td>
                         <div class="btn-row">
-                            <button class="btn ghost sm" data-modal-open="category-modal" data-action="{{ route('owner.categories.update', $c) }}" data-record='@json(['name' => $c->name, 'description' => $c->description])'>Edit</button>
+                            <button class="btn ghost sm" data-modal-open="category-modal" data-action="{{ route('owner.categories.update', $c) }}" data-record='@json($record)'>Edit</button>
                             <form method="POST" action="{{ route('owner.categories.destroy', $c) }}" class="ajax-form" onsubmit="return confirm('Archive this category?')">
                                 @csrf @method('DELETE')
                                 <button class="btn danger sm">Delete</button>
