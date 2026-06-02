@@ -8,25 +8,25 @@
 
 <div class="grid cols-4">
     <div class="card stat">
-        <div class="icon">💰</div>
+        <div class="iconbox"><x-icon name="dollar" size="22" /></div>
         <div class="label">Sales Today</div>
         <div class="value">${{ number_format($salestoday, 2) }}</div>
         <div class="trend">{{ $orderstoday }} orders today</div>
     </div>
     <div class="card stat">
-        <div class="icon">📅</div>
+        <div class="iconbox"><x-icon name="calendar" size="22" /></div>
         <div class="label">This Month</div>
         <div class="value">${{ number_format($salesmonth, 2) }}</div>
         <div class="trend">Month to date</div>
     </div>
     <div class="card stat">
-        <div class="icon">🏦</div>
+        <div class="iconbox"><x-icon name="briefcase" size="22" /></div>
         <div class="label">Total Revenue</div>
         <div class="value">${{ number_format($revenue, 2) }}</div>
         <div class="trend">All time</div>
     </div>
     <div class="card stat">
-        <div class="icon">📦</div>
+        <div class="iconbox"><x-icon name="package" size="22" /></div>
         <div class="label">Products / Staff</div>
         <div class="value">{{ $productcount }} <span class="muted" style="font-size:1rem">/ {{ $usercount }}</span></div>
         <div class="trend">In catalog</div>
@@ -74,7 +74,7 @@
                 @forelse($lowstock->take(6) as $p)
                     <tr><td>{{ $p->name }}</td><td class="num"><span class="badge {{ $p->quantity == 0 ? 'red' : 'amber' }}">{{ $p->quantity }}</span></td><td class="num">{{ $p->reorder }}</td></tr>
                 @empty
-                    <tr><td colspan="3" class="muted">All products are well stocked. 🎉</td></tr>
+                    <tr><td colspan="3" class="muted">All products are well stocked.</td></tr>
                 @endforelse
                 </tbody>
             </table>

@@ -9,7 +9,7 @@
 </head>
 <body style="background:#f1f5f9">
 <div class="receipt">
-    <h2>💊 {{ config('app.name') }}</h2>
+    <h2><x-icon name="cross" size="18" /> {{ config('app.name') }}</h2>
     <p class="r-center">Your trusted neighbourhood pharmacy<br>Tel: +000 000 0000</p>
     <hr>
     <div class="r-line"><span>Receipt</span><span>{{ $sale->reference }}</span></div>
@@ -28,9 +28,9 @@
     <div class="r-line"><span>Paid ({{ ucfirst($sale->method) }})</span><span>${{ number_format($sale->paid, 2) }}</span></div>
     <div class="r-line"><span>Change</span><span>${{ number_format($sale->balance, 2) }}</span></div>
     <hr>
-    <p class="r-center">Thank you for your purchase!<br>Get well soon. 💚</p>
+    <p class="r-center">Thank you for your purchase!<br>Get well soon. <x-icon name="heart" size="13" /></p>
     <div class="no-print" style="text-align:center;margin-top:18px">
-        <button class="btn primary sm" onclick="window.print()">🖨 Print</button>
+        <button class="btn primary sm" onclick="window.print()"><x-icon name="printer" size="15" /> Print</button>
         <button class="btn ghost sm" onclick="window.close()">Close</button>
     </div>
 </div>

@@ -24,7 +24,7 @@
     <meta name="twitter:title" content="PharmacyPOS — Smart Point of Sale for Pharmacies">
     <meta name="twitter:description" content="A complete pharmacy POS & inventory management system.">
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230f766e'><rect x='9' y='3' width='6' height='18' rx='1'/><rect x='3' y='9' width='18' height='6' rx='1'/></svg>">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     {{-- Structured data for rich search results --}}
@@ -75,12 +75,12 @@
     <section class="features" id="features">
         <h2>Everything a modern pharmacy needs</h2>
         <div class="grid cols-3">
-            <div class="card feature"><div class="fi">🛒</div><h3>Fast Point of Sale</h3><p class="muted">Search, scan and check out in seconds with automatic stock deduction and instant receipts.</p></div>
-            <div class="card feature"><div class="fi">📦</div><h3>Smart Inventory</h3><p class="muted">Track quantities, reorder levels and expiry dates with low-stock and expiry alerts.</p></div>
-            <div class="card feature"><div class="fi">👥</div><h3>Owner &amp; Attendant Roles</h3><p class="muted">Separate, secure workspaces so staff only see what they need.</p></div>
-            <div class="card feature"><div class="fi">📈</div><h3>Real-time Reports</h3><p class="muted">Revenue, best sellers and daily trends to help you make better decisions.</p></div>
-            <div class="card feature"><div class="fi">🔒</div><h3>Secure by Design</h3><p class="muted">Hashed passwords, CSRF protection, rate-limiting and role-based access.</p></div>
-            <div class="card feature"><div class="fi">🧾</div><h3>Printable Receipts</h3><p class="muted">Professional receipts ready to print or share for every transaction.</p></div>
+            <div class="card feature"><div class="fi"><x-icon name="cart" size="30" /></div><h3>Fast Point of Sale</h3><p class="muted">Search, scan and check out in seconds with automatic stock deduction and instant receipts.</p></div>
+            <div class="card feature"><div class="fi"><x-icon name="package" size="30" /></div><h3>Smart Inventory</h3><p class="muted">Track quantities, reorder levels and expiry dates with low-stock and expiry alerts.</p></div>
+            <div class="card feature"><div class="fi"><x-icon name="users" size="30" /></div><h3>Owner &amp; Attendant Roles</h3><p class="muted">Separate, secure workspaces so staff only see what they need.</p></div>
+            <div class="card feature"><div class="fi"><x-icon name="trending" size="30" /></div><h3>Real-time Reports</h3><p class="muted">Revenue, best sellers and daily trends to help you make better decisions.</p></div>
+            <div class="card feature"><div class="fi"><x-icon name="lock" size="30" /></div><h3>Secure by Design</h3><p class="muted">Hashed passwords, CSRF protection, rate-limiting and role-based access.</p></div>
+            <div class="card feature"><div class="fi"><x-icon name="receipt" size="30" /></div><h3>Printable Receipts</h3><p class="muted">Professional receipts ready to print or share for every transaction.</p></div>
         </div>
     </section>
 

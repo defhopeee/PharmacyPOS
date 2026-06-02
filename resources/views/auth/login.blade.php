@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>Sign in · {{ config('app.name') }}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230f766e'><rect x='9' y='3' width='6' height='18' rx='1'/><rect x='3' y='9' width='18' height='6' rx='1'/></svg>">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
@@ -15,10 +15,10 @@
         <h1>PharmacyPOS</h1>
         <p>The complete point-of-sale and inventory platform built for modern pharmacies.</p>
         <ul>
-            <li>✓ Lightning-fast checkout for attendants</li>
-            <li>✓ Full inventory &amp; staff control for owners</li>
-            <li>✓ Real-time sales reporting</li>
-            <li>✓ Secure, role-based access</li>
+            <li><x-icon name="check" size="15" /> Lightning-fast checkout for attendants</li>
+            <li><x-icon name="check" size="15" /> Full inventory &amp; staff control for owners</li>
+            <li><x-icon name="check" size="15" /> Real-time sales reporting</li>
+            <li><x-icon name="check" size="15" /> Secure, role-based access</li>
         </ul>
     </div>
 
@@ -50,8 +50,8 @@
 
             <div class="cred-hint">
                 <strong>Demo accounts</strong> (password: <code>Password123!</code>)<br>
-                Owner — <code>owner@pharmacypos.test</code><br>
-                Attendant — <code>attendant@pharmacypos.test</code>
+                Owner — <code>dianamwangi@gmail.com</code><br>
+                Attendant — <code>alexotieno@gmail.com</code>
             </div>
         </div>
     </div>

@@ -80,10 +80,10 @@ All seeded users share the password: **`Password123!`**
 
 | Role | Email |
 |------|-------|
-| Owner | `owner@pharmacypos.test` |
-| Attendant | `attendant@pharmacypos.test` |
-| Attendant | `brenda@pharmacypos.test` |
-| Attendant | `caleb@pharmacypos.test` |
+| Owner | `dianamwangi@gmail.com` |
+| Attendant | `alexotieno@gmail.com` |
+| Attendant | `brendaachieng@gmail.com` |
+| Attendant | `calebkimani@gmail.com` |
 
 The seeder also creates **7 categories, 3 suppliers, 18 products** and **~40 sample sales**.
 

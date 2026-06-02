@@ -14,15 +14,15 @@
                 <input type="date" name="to" value="{{ \Illuminate\Support\Carbon::parse($to)->format('Y-m-d') }}">
             </div>
             <button class="btn primary">Apply</button>
-            <button class="btn ghost no-print" type="button" onclick="window.print()">🖨 Print</button>
+            <button class="btn ghost no-print" type="button" onclick="window.print()"><x-icon name="printer" size="16" /> Print</button>
         </form>
     </div>
 </div>
 
 <div class="grid cols-3">
-    <div class="card stat"><div class="icon">💰</div><div class="label">Total Sales</div><div class="value">${{ number_format($totalsales, 2) }}</div></div>
-    <div class="card stat"><div class="icon">🧾</div><div class="label">Orders</div><div class="value">{{ $ordercount }}</div></div>
-    <div class="card stat"><div class="icon">📊</div><div class="label">Average Order</div><div class="value">${{ number_format($average, 2) }}</div></div>
+    <div class="card stat"><div class="iconbox"><x-icon name="dollar" size="22" /></div><div class="label">Total Sales</div><div class="value">${{ number_format($totalsales, 2) }}</div></div>
+    <div class="card stat"><div class="iconbox"><x-icon name="receipt" size="22" /></div><div class="label">Orders</div><div class="value">{{ $ordercount }}</div></div>
+    <div class="card stat"><div class="iconbox"><x-icon name="chart" size="22" /></div><div class="label">Average Order</div><div class="value">${{ number_format($average, 2) }}</div></div>
 </div>
 
 <div class="grid cols-2" style="margin-top:18px">

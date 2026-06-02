@@ -1,0 +1,16 @@
+# PharmacyPOS — run the app from this folder with clean URLs and no directory listing.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Serve static assets straight from the public/ folder.
+    RewriteRule ^(css|js|build|storage|images|fonts)/(.*)$ public/$1/$2 [L]
+    RewriteRule ^(robots\.txt|favicon\.ico)$ public/$1 [L]
+
+    # Send all other requests through the root front controller (clean URLs).
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Never show a directory index for this project.
+Options -Indexes

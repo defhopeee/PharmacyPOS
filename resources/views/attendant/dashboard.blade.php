@@ -4,19 +4,19 @@
 @section('content')
 <div class="grid cols-3">
     <div class="card stat">
-        <div class="icon">💵</div>
+        <div class="iconbox"><x-icon name="dollar" size="22" /></div>
         <div class="label">My Sales Today</div>
         <div class="value">${{ number_format($mysalestoday, 2) }}</div>
         <div class="trend">{{ $myorderstoday }} orders processed</div>
     </div>
     <div class="card stat">
-        <div class="icon">🧾</div>
+        <div class="iconbox"><x-icon name="receipt" size="22" /></div>
         <div class="label">Orders Today</div>
         <div class="value">{{ $myorderstoday }}</div>
         <div class="trend">Keep it up!</div>
     </div>
     <div class="card stat">
-        <div class="icon">⚠️</div>
+        <div class="iconbox"><x-icon name="alert" size="22" /></div>
         <div class="label">Low Stock Items</div>
         <div class="value">{{ $lowstock }}</div>
         <div class="trend">Let the owner know</div>
@@ -27,7 +27,7 @@
     <div class="card-body" style="text-align:center;padding:36px">
         <h2>Ready to serve customers?</h2>
         <p class="muted">Open the point of sale to start ringing up a new order.</p>
-        <a class="btn primary" href="{{ route('pos.index') }}">🛒 Open Point of Sale</a>
+        <a class="btn primary" href="{{ route('pos.index') }}"><x-icon name="cart" size="16" /> Open Point of Sale</a>
     </div>
 </div>
 

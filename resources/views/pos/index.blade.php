@@ -29,7 +29,7 @@
 
     <aside class="cart">
         <div class="cart-head flex-between">
-            <span>🛒 Current Order</span>
+            <span><x-icon name="cart" size="18" /> Current Order</span>
             <button class="btn ghost sm" id="clearcart">Clear</button>
         </div>
         <div class="cart-items" id="cartitems">

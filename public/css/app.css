@@ -95,11 +95,16 @@ h1, h2, h3, h4 { margin: 0 0 .35em; font-weight: 700; letter-spacing: -.01em; }
 .stat .label { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; }
 .stat .value { font-size: 1.7rem; font-weight: 800; margin-top: 6px; }
 .stat .trend { font-size: .8rem; color: var(--muted); margin-top: 4px; }
-.stat .icon {
+.stat .iconbox {
     float: right; width: 44px; height: 44px; border-radius: 12px;
-    display: grid; place-items: center; font-size: 1.2rem;
+    display: grid; place-items: center;
     background: var(--brand-light); color: var(--brand-dark);
 }
+/* Inline SVG icons */
+.icon { vertical-align: -0.18em; flex: 0 0 auto; }
+.btn .icon { vertical-align: -0.18em; }
+.nav a .ic { display: inline-flex; align-items: center; justify-content: center; }
+.feature .fi { color: var(--brand-dark); margin-bottom: 12px; }
 
 /* ---------- Tables ---------- */
 .table-wrap { overflow-x: auto; }

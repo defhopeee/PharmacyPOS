@@ -31,10 +31,10 @@ class DatabaseSeeder extends Seeder
     private function seedUsers(): void
     {
         $users = [
-            ['name' => 'Diana Owner', 'email' => 'owner@pharmacypos.test', 'role' => 'owner', 'phone' => '+1 555 0100'],
-            ['name' => 'Alex Attendant', 'email' => 'attendant@pharmacypos.test', 'role' => 'attendant', 'phone' => '+1 555 0101'],
-            ['name' => 'Brenda Sales', 'email' => 'brenda@pharmacypos.test', 'role' => 'attendant', 'phone' => '+1 555 0102'],
-            ['name' => 'Caleb Counter', 'email' => 'caleb@pharmacypos.test', 'role' => 'attendant', 'phone' => '+1 555 0103'],
+            ['name' => 'Diana Mwangi', 'email' => 'dianamwangi@gmail.com', 'role' => 'owner', 'phone' => '+1 555 0100'],
+            ['name' => 'Alex Otieno', 'email' => 'alexotieno@gmail.com', 'role' => 'attendant', 'phone' => '+1 555 0101'],
+            ['name' => 'Brenda Achieng', 'email' => 'brendaachieng@gmail.com', 'role' => 'attendant', 'phone' => '+1 555 0102'],
+            ['name' => 'Caleb Kimani', 'email' => 'calebkimani@gmail.com', 'role' => 'attendant', 'phone' => '+1 555 0103'],
         ];
 
         foreach ($users as $u) {
@@ -68,9 +68,9 @@ class DatabaseSeeder extends Seeder
     private function seedSuppliers(): array
     {
         $suppliers = [
-            ['name' => 'MediSource Distributors', 'phone' => '+1 555 2000', 'email' => 'sales@medisource.test', 'address' => '12 Industrial Way'],
-            ['name' => 'HealthLine Pharma', 'phone' => '+1 555 2001', 'email' => 'orders@healthline.test', 'address' => '88 Market Street'],
-            ['name' => 'GlobalMed Supplies', 'phone' => '+1 555 2002', 'email' => 'info@globalmed.test', 'address' => '5 Commerce Plaza'],
+            ['name' => 'MediSource Distributors', 'phone' => '+1 555 2000', 'email' => 'medisourcesales@gmail.com', 'address' => '12 Industrial Way'],
+            ['name' => 'HealthLine Pharma', 'phone' => '+1 555 2001', 'email' => 'healthlineorders@gmail.com', 'address' => '88 Market Street'],
+            ['name' => 'GlobalMed Supplies', 'phone' => '+1 555 2002', 'email' => 'globalmedinfo@gmail.com', 'address' => '5 Commerce Plaza'],
         ];
 
         $list = [];

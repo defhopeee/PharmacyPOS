@@ -5,7 +5,7 @@
 <div class="card" style="max-width:760px">
     <div class="card-head">
         <h3>{{ $sale->reference }}</h3>
-        <a class="btn primary sm" href="{{ route('sales.receipt', $sale) }}" target="_blank">🧾 Print Receipt</a>
+        <a class="btn primary sm" href="{{ route('sales.receipt', $sale) }}" target="_blank"><x-icon name="printer" size="16" /> Print Receipt</a>
     </div>
     <div class="card-body">
         <div class="grid cols-2" style="margin-bottom:18px">
