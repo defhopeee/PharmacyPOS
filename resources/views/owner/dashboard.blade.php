@@ -10,26 +10,26 @@
     <div class="card stat">
         <div class="iconbox"><x-icon name="dollar" size="22" /></div>
         <div class="label">Sales Today</div>
-        <div class="value">${{ number_format($salestoday, 2) }}</div>
-        <div class="trend">{{ $orderstoday }} orders today</div>
+        <div class="value">{{ money($salestoday) }}</div>
+        <div class="trend"><x-trend :data="$trends['salestoday']" label="vs yesterday" /></div>
     </div>
     <div class="card stat">
         <div class="iconbox"><x-icon name="calendar" size="22" /></div>
         <div class="label">This Month</div>
-        <div class="value">${{ number_format($salesmonth, 2) }}</div>
-        <div class="trend">Month to date</div>
+        <div class="value">{{ money($salesmonth) }}</div>
+        <div class="trend"><x-trend :data="$trends['salesmonth']" label="vs last month" /></div>
     </div>
     <div class="card stat">
         <div class="iconbox"><x-icon name="briefcase" size="22" /></div>
         <div class="label">Total Revenue</div>
-        <div class="value">${{ number_format($revenue, 2) }}</div>
+        <div class="value">{{ money($revenue) }}</div>
         <div class="trend">All time</div>
     </div>
     <div class="card stat">
         <div class="iconbox"><x-icon name="package" size="22" /></div>
         <div class="label">Products / Staff</div>
         <div class="value">{{ $productcount }} <span class="muted" style="font-size:1rem">/ {{ $usercount }}</span></div>
-        <div class="trend">In catalog</div>
+        <div class="trend">{{ $orderstoday }} orders today</div>
     </div>
 </div>
 
@@ -40,8 +40,8 @@
             <div style="display:flex;align-items:flex-end;gap:14px;height:200px">
                 @foreach($chart as $c)
                     <div style="flex:1;text-align:center;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
-                        <div class="muted" style="font-size:.75rem;margin-bottom:4px">${{ number_format($c['total'], 0) }}</div>
-                        <div title="${{ number_format($c['total'],2) }}" style="background:linear-gradient(180deg,var(--brand),var(--brand-dark));border-radius:8px 8px 0 0;height:{{ max(4, ($c['total'] / $maxchart) * 160) }}px"></div>
+                        <div class="muted" style="font-size:.72rem;margin-bottom:4px">{{ number_format($c['total'], 0) }}</div>
+                        <div title="{{ money($c['total']) }}" style="background:linear-gradient(180deg,var(--brand),var(--brand-dark));border-radius:8px 8px 0 0;height:{{ max(4, ($c['total'] / $maxchart) * 160) }}px"></div>
                         <div class="muted" style="font-size:.78rem;margin-top:6px">{{ $c['label'] }}</div>
                     </div>
                 @endforeach
@@ -109,8 +109,8 @@
                     <td><strong>{{ $s->reference }}</strong></td>
                     <td>{{ $s->user->name ?? '—' }}</td>
                     <td>{{ $s->customer ?? 'Walk-in' }}</td>
-                    <td><span class="badge gray">{{ ucfirst($s->method) }}</span></td>
-                    <td class="num">${{ number_format($s->total, 2) }}</td>
+                    <td><span class="badge gray">{{ strtoupper($s->method) }}</span></td>
+                    <td class="num">{{ money($s->total) }}</td>
                     <td class="muted">{{ $s->createdat->diffForHumans() }}</td>
                     <td><a class="btn ghost sm" href="{{ route('sales.show', $s) }}">View</a></td>
                 </tr>

@@ -8,45 +8,47 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::withCount('products')->orderBy('name')->paginate(15);
+        $search = $request->string('search')->toString();
 
-        return view('owner.categories.index', compact('categories'));
-    }
+        $categories = Category::withCount('products')
+            ->when($search, fn ($q) => $q->where('name', 'like', "%{$search}%"))
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
 
-    public function create()
-    {
-        return view('owner.categories.form', ['category' => new Category()]);
+        return view('owner.categories.index', compact('categories', 'search'));
     }
 
     public function store(Request $request)
     {
         Category::create($this->validateData($request));
 
-        return redirect()->route('owner.categories.index')
-            ->with('status', 'Category created.');
-    }
-
-    public function edit(Category $category)
-    {
-        return view('owner.categories.form', compact('category'));
+        return $this->respond($request, 'Category created.');
     }
 
     public function update(Request $request, Category $category)
     {
         $category->update($this->validateData($request, $category->id));
 
-        return redirect()->route('owner.categories.index')
-            ->with('status', 'Category updated.');
+        return $this->respond($request, 'Category updated.');
     }
 
-    public function destroy(Category $category)
+    public function destroy(Request $request, Category $category)
     {
         $category->delete();
 
-        return redirect()->route('owner.categories.index')
-            ->with('status', 'Category deleted.');
+        return $this->respond($request, 'Category archived.');
+    }
+
+    private function respond(Request $request, string $message)
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message]);
+        }
+
+        return redirect()->route('owner.categories.index')->with('status', $message);
     }
 
     private function validateData(Request $request, ?int $ignore = null): array

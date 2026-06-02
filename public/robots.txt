@@ -1,9 +1,2 @@
 User-agent: *
-Allow: /$
-Allow: /login
-Disallow: /owner/
-Disallow: /pos
-Disallow: /sales
-Disallow: /dashboard
-
-Sitemap: /sitemap.xml
+Disallow: /

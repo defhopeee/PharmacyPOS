@@ -19,9 +19,11 @@ return new class extends Migration
             $table->decimal('total', 12, 2)->default(0);
             $table->decimal('paid', 12, 2)->default(0);
             $table->decimal('balance', 12, 2)->default(0);
-            $table->enum('method', ['cash', 'card', 'mobile'])->default('cash');
+            $table->enum('method', ['cash', 'card', 'mpesa'])->default('cash');
+            $table->string('mpesareceipt')->nullable();
             $table->timestamp('createdat')->nullable();
             $table->timestamp('updatedat')->nullable();
+            $table->softDeletes('deletedat');
         });
     }
 

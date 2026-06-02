@@ -36,18 +36,18 @@
             <div class="empty-cart">No items yet. Tap a product to add it.</div>
         </div>
         <div class="cart-foot">
-            <div class="sumrow"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+            <div class="sumrow"><span>Subtotal</span><span id="subtotal">KSh 0.00</span></div>
             <div class="pay-grid">
                 <div>
-                    <label class="muted" style="font-size:.78rem">Discount</label>
+                    <label class="muted" style="font-size:.78rem">Discount (KSh)</label>
                     <input type="number" id="discount" min="0" step="0.01" value="0">
                 </div>
                 <div>
-                    <label class="muted" style="font-size:.78rem">Tax</label>
+                    <label class="muted" style="font-size:.78rem">Tax (KSh)</label>
                     <input type="number" id="tax" min="0" step="0.01" value="0">
                 </div>
             </div>
-            <div class="sumrow total"><span>Total</span><span id="total">$0.00</span></div>
+            <div class="sumrow total"><span>Total</span><span id="total">KSh 0.00</span></div>
             <div class="pay-grid">
                 <div>
                     <label class="muted" style="font-size:.78rem">Customer (optional)</label>
@@ -55,17 +55,24 @@
                 </div>
                 <div>
                     <label class="muted" style="font-size:.78rem">Method</label>
-                    <select id="method"><option value="cash">Cash</option><option value="card">Card</option><option value="mobile">Mobile</option></select>
+                    <select id="method"><option value="cash">Cash</option><option value="card">Card</option><option value="mpesa">M-Pesa</option></select>
+                </div>
+            </div>
+            <div class="pay-grid" id="mpesarow" style="display:none">
+                <div style="grid-column:1 / -1">
+                    <label class="muted" style="font-size:.78rem">M-Pesa Phone (07.. or 2547..)</label>
+                    <input type="tel" id="mpesaphone" placeholder="0712345678">
+                    @if($mpesaSimulated)<small class="muted" style="font-size:.72rem">Simulation mode — no live charge. Add Daraja keys in .env for real STK push.</small>@endif
                 </div>
             </div>
             <div class="pay-grid">
                 <div>
-                    <label class="muted" style="font-size:.78rem">Amount Paid</label>
+                    <label class="muted" style="font-size:.78rem">Amount Paid (KSh)</label>
                     <input type="number" id="paid" min="0" step="0.01" value="0">
                 </div>
                 <div>
                     <label class="muted" style="font-size:.78rem">Change</label>
-                    <input type="text" id="change" value="$0.00" readonly>
+                    <input type="text" id="change" value="KSh 0.00" readonly>
                 </div>
             </div>
             <button class="btn primary block" id="checkout" style="margin-top:10px">Complete Sale</button>
@@ -77,11 +84,13 @@
 <script>
 const CATALOG = @json($catalog);
 const CHECKOUT_URL = "{{ route('pos.checkout') }}";
+const MPESA_URL = "{{ route('pos.mpesa') }}";
+const MPESA_STATUS_URL = "{{ url('pos/mpesa') }}";
 const CSRF = document.querySelector('meta[name=csrf-token]').content;
 const cart = [];
 let activeCat = 'all';
 
-const fmt = n => '$' + Number(n).toFixed(2);
+const fmt = n => 'KSh ' + Number(n).toFixed(2);
 
 function renderProducts() {
     const term = document.getElementById('search').value.toLowerCase().trim();
@@ -173,10 +182,58 @@ function toast(msg) {
     setTimeout(() => t.remove(), 2600);
 }
 
+function cartTotal() {
+    const subtotal = cart.reduce((s, l) => s + l.price * l.quantity, 0);
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const tax = parseFloat(document.getElementById('tax').value) || 0;
+    return Math.max(0, subtotal - discount + tax);
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function runMpesa(total, btn) {
+    const phone = document.getElementById('mpesaphone').value.trim();
+    if (!phone) { toast('Enter the customer M-Pesa phone number'); return null; }
+    btn.textContent = 'Sending STK push…';
+    const res = await fetch(MPESA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+        body: JSON.stringify({ phone, amount: total })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) { toast(data.message || 'M-Pesa request failed'); return null; }
+    toast(data.message);
+    btn.textContent = 'Awaiting payment…';
+    // Poll for confirmation (up to ~30s)
+    for (let i = 0; i < 12; i++) {
+        await sleep(2500);
+        const st = await fetch(MPESA_STATUS_URL + '/' + encodeURIComponent(data.checkoutid), { headers: { 'Accept': 'application/json' } });
+        const sd = await st.json();
+        if (sd.paid) { return sd.receipt || data.checkoutid; }
+    }
+    toast('Payment not confirmed in time. Please retry.');
+    return null;
+}
+
 async function checkout() {
     if (!cart.length) { toast('Cart is empty'); return; }
     const btn = document.getElementById('checkout');
-    btn.disabled = true; btn.textContent = 'Processing…';
+    const method = document.getElementById('method').value;
+    const total = cartTotal();
+    btn.disabled = true;
+
+    let mpesareceipt = null;
+    let paid = parseFloat(document.getElementById('paid').value) || 0;
+
+    if (method === 'mpesa') {
+        mpesareceipt = await runMpesa(total, btn);
+        if (!mpesareceipt) { btn.disabled = false; btn.textContent = 'Complete Sale'; return; }
+        paid = total;
+    } else if (method === 'card') {
+        paid = total;
+    }
+
+    btn.textContent = 'Processing…';
     try {
         const res = await fetch(CHECKOUT_URL, {
             method: 'POST',
@@ -186,8 +243,9 @@ async function checkout() {
                 customer: document.getElementById('customer').value,
                 discount: parseFloat(document.getElementById('discount').value) || 0,
                 tax: parseFloat(document.getElementById('tax').value) || 0,
-                paid: parseFloat(document.getElementById('paid').value) || 0,
-                method: document.getElementById('method').value,
+                paid: paid,
+                method: method,
+                mpesareceipt: mpesareceipt,
             })
         });
         const data = await res.json();
@@ -202,6 +260,15 @@ async function checkout() {
         btn.disabled = false; btn.textContent = 'Complete Sale';
     }
 }
+
+document.getElementById('method').addEventListener('change', function () {
+    const isMpesa = this.value === 'mpesa';
+    document.getElementById('mpesarow').style.display = isMpesa ? 'grid' : 'none';
+    const paid = document.getElementById('paid');
+    if (this.value === 'card' || isMpesa) { paid.value = cartTotal().toFixed(2); paid.readOnly = true; }
+    else { paid.readOnly = false; }
+    recalc();
+});
 
 document.getElementById('search').addEventListener('input', renderProducts);
 document.getElementById('cattabs').addEventListener('click', e => {

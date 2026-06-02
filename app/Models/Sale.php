@@ -5,11 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
+    use SoftDeletes;
+
     const CREATED_AT = 'createdat';
     const UPDATED_AT = 'updatedat';
+    const DELETED_AT = 'deletedat';
 
     protected $fillable = [
         'reference',
@@ -22,6 +26,7 @@ class Sale extends Model
         'paid',
         'balance',
         'method',
+        'mpesareceipt',
     ];
 
     protected function casts(): array
@@ -38,7 +43,9 @@ class Sale extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'userid');
+        // Keep the seller's name on historical sales even after the staff
+        // account is archived (soft-deleted).
+        return $this->belongsTo(User::class, 'userid')->withTrashed();
     }
 
     public function items(): HasMany

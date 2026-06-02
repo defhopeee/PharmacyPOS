@@ -18,15 +18,16 @@
     <div class="r-line"><span>Customer</span><span>{{ $sale->customer ?? 'Walk-in' }}</span></div>
     <hr>
     @foreach($sale->items as $it)
-        <div class="r-line"><span>{{ $it->name }} x{{ $it->quantity }}</span><span>${{ number_format($it->total, 2) }}</span></div>
+        <div class="r-line"><span>{{ $it->name }} x{{ $it->quantity }}</span><span>{{ money($it->total) }}</span></div>
     @endforeach
     <hr>
-    <div class="r-line"><span>Subtotal</span><span>${{ number_format($sale->subtotal, 2) }}</span></div>
-    <div class="r-line"><span>Discount</span><span>-${{ number_format($sale->discount, 2) }}</span></div>
-    <div class="r-line"><span>Tax</span><span>${{ number_format($sale->tax, 2) }}</span></div>
-    <div class="r-line" style="font-weight:800;font-size:1rem"><span>TOTAL</span><span>${{ number_format($sale->total, 2) }}</span></div>
-    <div class="r-line"><span>Paid ({{ ucfirst($sale->method) }})</span><span>${{ number_format($sale->paid, 2) }}</span></div>
-    <div class="r-line"><span>Change</span><span>${{ number_format($sale->balance, 2) }}</span></div>
+    <div class="r-line"><span>Subtotal</span><span>{{ money($sale->subtotal) }}</span></div>
+    <div class="r-line"><span>Discount</span><span>-{{ money($sale->discount) }}</span></div>
+    <div class="r-line"><span>Tax</span><span>{{ money($sale->tax) }}</span></div>
+    <div class="r-line" style="font-weight:800;font-size:1rem"><span>TOTAL</span><span>{{ money($sale->total) }}</span></div>
+    <div class="r-line"><span>Paid ({{ strtoupper($sale->method) }})</span><span>{{ money($sale->paid) }}</span></div>
+    @if($sale->mpesareceipt)<div class="r-line"><span>M-Pesa Ref</span><span>{{ $sale->mpesareceipt }}</span></div>@endif
+    <div class="r-line"><span>Change</span><span>{{ money($sale->balance) }}</span></div>
     <hr>
     <p class="r-center">Thank you for your purchase!<br>Get well soon. <x-icon name="heart" size="13" /></p>
     <div class="no-print" style="text-align:center;margin-top:18px">

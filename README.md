@@ -13,15 +13,20 @@ It has **two sides**:
 
 ## Features
 
-- **Role-based two-sided system** — separate, secure workspaces for owners and attendants.
+- **Role-based two-sided system** — separate, secure workspaces for owners and attendants. Login is the default page (internal system).
 - **Fast Point of Sale** — live product search, category filtering, cart, discounts, tax, change calculation, and instant printable receipts.
+- **M-Pesa STK Push** — pay by Cash, Card or **M-Pesa**. Daraja STK push is built in and runs in a safe simulation mode out of the box (add sandbox/production keys in `.env` for live payments).
+- **Kenyan Shillings (KSh)** — all money is formatted as KES throughout.
+- **Modal CRUD** — products, categories, suppliers and staff are created/edited in slick AJAX modals (no page reloads), with **debounced auto-search** and filters.
 - **Inventory management** — products, categories, suppliers, stock levels, reorder alerts and expiry tracking.
 - **Atomic checkout** — stock is decremented inside a database transaction with row locking to prevent overselling.
-- **Owner dashboard** — revenue stats, 7-day sales chart, top products, low-stock and expiry alerts.
+- **Owner dashboard** — revenue stats with **trend indicators** (vs previous period), 7-day sales chart, top products, low-stock and expiry alerts.
+- **Notifications** — a live bell with low-stock, out-of-stock and expiry alerts.
+- **Soft deletes** — archiving a staff member (or product/category/supplier) keeps all their data; sales stay attributed to them and they can be **restored**.
+- **Database backup** — owners can download a full SQL backup with one click.
 - **Reports** — date-range sales reports by day, payment method and best-selling products (printable).
-- **Staff management** — owners create/disable owner & attendant accounts with strong-password enforcement.
+- **Responsive** — works on phones, tablets and desktops; scrollbars are hidden for a clean look.
 - **Security first** — see [Security](#security) below.
-- **SEO** — public landing page with full meta tags, Open Graph, Twitter cards, JSON-LD structured data, `sitemap.xml` and `robots.txt`.
 
 ---
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('remembertoken', 100)->nullable();
             $table->timestamp('createdat')->nullable();
             $table->timestamp('updatedat')->nullable();
+            $table->softDeletes('deletedat');
         });
     }
 

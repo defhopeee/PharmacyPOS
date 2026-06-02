@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('expiry')->nullable();
             $table->timestamp('createdat')->nullable();
             $table->timestamp('updatedat')->nullable();
+            $table->softDeletes('deletedat');
         });
     }
 

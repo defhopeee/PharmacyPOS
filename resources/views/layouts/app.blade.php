@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') · {{ config('app.name') }}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230f766e'><rect x='9' y='3' width='6' height='18' rx='1'/><rect x='3' y='9' width='18' height='6' rx='1'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
@@ -14,7 +14,7 @@
 <div class="shell">
     <aside class="sidebar" id="sidebar">
         <div class="brand">
-            <span class="logo">P</span> {{ config('app.name') }}
+            <img src="{{ asset('images/logo.svg') }}" alt="PharmacyPOS" style="width:34px;height:34px;border-radius:9px"> {{ config('app.name') }}
         </div>
 
         <div class="role-pill">{{ $owner ? 'Owner Workspace' : 'Attendant Workspace' }}</div>
@@ -49,6 +49,26 @@
                 <span class="page-title">@yield('title', 'Dashboard')</span>
             </div>
             <div class="actions">
+                <div class="bell no-print">
+                    <button class="bell-btn" id="bellbtn" type="button" aria-label="Notifications">
+                        <x-icon name="alert" size="18" />
+                        @if($notifcount > 0)<span class="bell-count">{{ $notifcount > 99 ? '99+' : $notifcount }}</span>@endif
+                    </button>
+                    <div class="bell-menu" id="bellmenu">
+                        <div class="bm-head">Notifications ({{ $notifcount }})</div>
+                        @forelse($notifications as $n)
+                            <div class="bell-item {{ $n['type'] }}">
+                                <span class="bi-ic"><x-icon name="{{ $n['icon'] }}" size="16" /></span>
+                                <div>
+                                    <div class="bi-t">{{ $n['title'] }}</div>
+                                    <div class="bi-m">{{ $n['meta'] }}</div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="bell-empty">All good — no alerts right now.</div>
+                        @endforelse
+                    </div>
+                </div>
                 <span class="badge teal">{{ ucfirst($user->role) }}</span>
                 <a class="btn primary sm" href="{{ route('pos.index') }}"><x-icon name="plus" size="16" /> New Sale</a>
             </div>
@@ -77,7 +97,17 @@
 
 <script>
     if (window.innerWidth <= 980) { document.getElementById('menubtn').style.display = 'inline-flex'; }
+    // Notifications bell toggle
+    (function () {
+        const btn = document.getElementById('bellbtn');
+        const menu = document.getElementById('bellmenu');
+        if (btn) {
+            btn.addEventListener('click', e => { e.stopPropagation(); menu.classList.toggle('open'); });
+            document.addEventListener('click', e => { if (!menu.contains(e.target)) menu.classList.remove('open'); });
+        }
+    })();
 </script>
+<script src="{{ asset('js/app.js') }}"></script>
 @stack('scripts')
 </body>
 </html>

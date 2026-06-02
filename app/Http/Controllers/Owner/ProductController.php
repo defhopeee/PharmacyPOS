@@ -13,23 +13,24 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $search = $request->string('search')->toString();
+        $categoryid = $request->integer('categoryid');
 
         $products = Product::with(['category', 'supplier'])
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('barcode', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('barcode', 'like', "%{$search}%");
+                });
             })
+            ->when($categoryid, fn ($q) => $q->where('categoryid', $categoryid))
             ->orderBy('name')
             ->paginate(12)
             ->withQueryString();
 
-        return view('owner.products.index', compact('products', 'search'));
-    }
-
-    public function create()
-    {
-        return view('owner.products.form', [
-            'product' => new Product(),
+        return view('owner.products.index', [
+            'products' => $products,
+            'search' => $search,
+            'categoryid' => $categoryid,
             'categories' => Category::orderBy('name')->get(),
             'suppliers' => Supplier::orderBy('name')->get(),
         ]);
@@ -37,37 +38,32 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $data = $this->validateData($request);
-        Product::create($data);
+        Product::create($this->validateData($request));
 
-        return redirect()->route('owner.products.index')
-            ->with('status', 'Product created successfully.');
-    }
-
-    public function edit(Product $product)
-    {
-        return view('owner.products.form', [
-            'product' => $product,
-            'categories' => Category::orderBy('name')->get(),
-            'suppliers' => Supplier::orderBy('name')->get(),
-        ]);
+        return $this->respond($request, 'Product created successfully.');
     }
 
     public function update(Request $request, Product $product)
     {
-        $data = $this->validateData($request, $product->id);
-        $product->update($data);
+        $product->update($this->validateData($request, $product->id));
 
-        return redirect()->route('owner.products.index')
-            ->with('status', 'Product updated successfully.');
+        return $this->respond($request, 'Product updated successfully.');
     }
 
-    public function destroy(Product $product)
+    public function destroy(Request $request, Product $product)
     {
         $product->delete();
 
-        return redirect()->route('owner.products.index')
-            ->with('status', 'Product deleted.');
+        return $this->respond($request, 'Product archived.');
+    }
+
+    private function respond(Request $request, string $message)
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message]);
+        }
+
+        return redirect()->route('owner.products.index')->with('status', $message);
     }
 
     private function validateData(Request $request, ?int $ignore = null): array

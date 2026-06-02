@@ -24,13 +24,27 @@ class DashboardController extends Controller
     private function owner()
     {
         $today = Carbon::today();
+        $yesterday = $today->copy()->subDay();
 
-        $salestoday = Sale::whereDate('createdat', $today)->sum('total');
-        $salesmonth = Sale::whereMonth('createdat', $today->month)
+        $salestoday = (float) Sale::whereDate('createdat', $today)->sum('total');
+        $salesyesterday = (float) Sale::whereDate('createdat', $yesterday)->sum('total');
+        $salesmonth = (float) Sale::whereMonth('createdat', $today->month)
             ->whereYear('createdat', $today->year)
             ->sum('total');
+        $lastmonth = $today->copy()->subMonth();
+        $saleslastmonth = (float) Sale::whereMonth('createdat', $lastmonth->month)
+            ->whereYear('createdat', $lastmonth->year)
+            ->sum('total');
         $orderstoday = Sale::whereDate('createdat', $today)->count();
-        $revenue = Sale::sum('total');
+        $ordersyesterday = Sale::whereDate('createdat', $yesterday)->count();
+        $revenue = (float) Sale::sum('total');
+
+        // Trend indicators (current vs previous period).
+        $trends = [
+            'salestoday' => trendData($salestoday, $salesyesterday),
+            'salesmonth' => trendData($salesmonth, $saleslastmonth),
+            'orderstoday' => trendData($orderstoday, $ordersyesterday),
+        ];
 
         $productcount = Product::count();
         $usercount = User::count();
@@ -61,7 +75,7 @@ class DashboardController extends Controller
         return view('owner.dashboard', compact(
             'salestoday', 'salesmonth', 'orderstoday', 'revenue',
             'productcount', 'usercount', 'lowstock', 'expiring',
-            'recentsales', 'topproducts', 'chart'
+            'recentsales', 'topproducts', 'chart', 'trends'
         ));
     }
 

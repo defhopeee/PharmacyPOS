@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Owner\BackupController;
 use App\Http\Controllers\Owner\CategoryController;
 use App\Http\Controllers\Owner\ProductController;
 use App\Http\Controllers\Owner\ReportController;
@@ -13,10 +13,11 @@ use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
 
 /*
-| Public / SEO
+| Entry point — internal system, so login is the default page.
 */
-Route::get('/', [HomeController::class, 'landing'])->name('home');
-Route::get('/sitemap.xml', [HomeController::class, 'sitemap'])->name('sitemap');
+Route::get('/', function () {
+    return redirect()->route(auth()->check() ? 'dashboard' : 'login');
+})->name('home');
 
 /*
 | Authentication
@@ -45,15 +46,22 @@ Route::middleware(['auth', 'role'])->group(function () {
 Route::middleware(['auth', 'role:attendant,owner'])->group(function () {
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/pos/checkout', [PosController::class, 'checkout'])->name('pos.checkout');
+    Route::post('/pos/mpesa', [PosController::class, 'mpesa'])->name('pos.mpesa');
+    Route::get('/pos/mpesa/{checkoutid}', [PosController::class, 'mpesaStatus'])->name('pos.mpesa.status');
 });
 
 /*
 | Owner only
 */
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
-    Route::resource('products', ProductController::class)->except('show');
-    Route::resource('categories', CategoryController::class)->except('show');
-    Route::resource('suppliers', SupplierController::class)->except('show');
-    Route::resource('users', UserController::class)->except('show');
+    $only = ['index', 'store', 'update', 'destroy'];
+    Route::resource('products', ProductController::class)->only($only);
+    Route::resource('categories', CategoryController::class)->only($only);
+    Route::resource('suppliers', SupplierController::class)->only($only);
+    Route::resource('users', UserController::class)->only($only);
+    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+
+    Route::get('backup', [BackupController::class, 'download'])->name('backup');
 });

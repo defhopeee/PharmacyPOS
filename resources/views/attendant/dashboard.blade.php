@@ -6,7 +6,7 @@
     <div class="card stat">
         <div class="iconbox"><x-icon name="dollar" size="22" /></div>
         <div class="label">My Sales Today</div>
-        <div class="value">${{ number_format($mysalestoday, 2) }}</div>
+        <div class="value">{{ money($mysalestoday) }}</div>
         <div class="trend">{{ $myorderstoday }} orders processed</div>
     </div>
     <div class="card stat">
@@ -41,8 +41,8 @@
                 <tr>
                     <td><strong>{{ $s->reference }}</strong></td>
                     <td>{{ $s->customer ?? 'Walk-in' }}</td>
-                    <td><span class="badge gray">{{ ucfirst($s->method) }}</span></td>
-                    <td class="num">${{ number_format($s->total, 2) }}</td>
+                    <td><span class="badge gray">{{ strtoupper($s->method) }}</span></td>
+                    <td class="num">{{ money($s->total) }}</td>
                     <td class="muted">{{ $s->createdat->diffForHumans() }}</td>
                     <td><a class="btn ghost sm" href="{{ route('sales.show', $s) }}">View</a></td>
                 </tr>

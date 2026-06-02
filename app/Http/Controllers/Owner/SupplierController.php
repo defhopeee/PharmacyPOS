@@ -8,45 +8,49 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = Supplier::withCount('products')->orderBy('name')->paginate(15);
+        $search = $request->string('search')->toString();
 
-        return view('owner.suppliers.index', compact('suppliers'));
-    }
+        $suppliers = Supplier::withCount('products')
+            ->when($search, fn ($q) => $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%"))
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
 
-    public function create()
-    {
-        return view('owner.suppliers.form', ['supplier' => new Supplier()]);
+        return view('owner.suppliers.index', compact('suppliers', 'search'));
     }
 
     public function store(Request $request)
     {
         Supplier::create($this->validateData($request));
 
-        return redirect()->route('owner.suppliers.index')
-            ->with('status', 'Supplier created.');
-    }
-
-    public function edit(Supplier $supplier)
-    {
-        return view('owner.suppliers.form', compact('supplier'));
+        return $this->respond($request, 'Supplier created.');
     }
 
     public function update(Request $request, Supplier $supplier)
     {
         $supplier->update($this->validateData($request));
 
-        return redirect()->route('owner.suppliers.index')
-            ->with('status', 'Supplier updated.');
+        return $this->respond($request, 'Supplier updated.');
     }
 
-    public function destroy(Supplier $supplier)
+    public function destroy(Request $request, Supplier $supplier)
     {
         $supplier->delete();
 
-        return redirect()->route('owner.suppliers.index')
-            ->with('status', 'Supplier deleted.');
+        return $this->respond($request, 'Supplier archived.');
+    }
+
+    private function respond(Request $request, string $message)
+    {
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message]);
+        }
+
+        return redirect()->route('owner.suppliers.index')->with('status', $message);
     }
 
     private function validateData(Request $request): array

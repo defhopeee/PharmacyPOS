@@ -130,7 +130,7 @@ class DatabaseSeeder extends Seeder
 
         $attendants = User::where('role', 'attendant')->get();
         $products = Product::all();
-        $methods = ['cash', 'card', 'mobile'];
+        $methods = ['cash', 'card', 'mpesa'];
         $customers = ['Walk-in', 'John Doe', 'Mary Smith', 'Peter Jones', null, 'Grace Lee'];
 
         // Spread ~40 sales across the last 14 days.

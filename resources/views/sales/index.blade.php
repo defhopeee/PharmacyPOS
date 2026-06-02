@@ -4,9 +4,9 @@
 @section('content')
 <div class="card">
     <div class="card-head">
-        <form method="GET" style="display:flex;gap:8px">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by reference…" style="padding:8px 12px;border:1px solid var(--line);border-radius:9px">
-            <button class="btn ghost sm">Search</button>
+        <form method="GET" data-autosearch style="display:flex;gap:8px">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by reference…" style="padding:9px 12px;border:1px solid var(--line);border-radius:9px;min-width:200px">
+            <noscript><button class="btn ghost sm">Search</button></noscript>
         </form>
         <a class="btn primary sm" href="{{ route('pos.index') }}">+ New Sale</a>
     </div>
@@ -19,9 +19,9 @@
                     <td><strong>{{ $s->reference }}</strong></td>
                     <td>{{ $s->user->name ?? '—' }}</td>
                     <td>{{ $s->customer ?? 'Walk-in' }}</td>
-                    <td><span class="badge gray">{{ ucfirst($s->method) }}</span></td>
+                    <td><span class="badge gray">{{ strtoupper($s->method) }}</span></td>
                     <td class="num">{{ $s->items()->count() }}</td>
-                    <td class="num">${{ number_format($s->total, 2) }}</td>
+                    <td class="num">{{ money($s->total) }}</td>
                     <td class="muted">{{ $s->createdat->format('d M Y, H:i') }}</td>
                     <td>
                         <div class="btn-row">

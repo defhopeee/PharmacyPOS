@@ -6,9 +6,11 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Services\Mpesa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class PosController extends Controller
@@ -22,7 +24,31 @@ class PosController extends Controller
 
         $categories = Category::orderBy('name')->get();
 
-        return view('pos.index', compact('products', 'categories'));
+        return view('pos.index', [
+            'products' => $products,
+            'categories' => $categories,
+            'mpesaSimulated' => app(Mpesa::class)->simulating(),
+        ]);
+    }
+
+    /**
+     * Initiate an M-Pesa STK push to the customer's phone.
+     */
+    public function mpesa(Request $request, Mpesa $mpesa)
+    {
+        $data = $request->validate([
+            'phone' => ['required', 'string', 'min:9', 'max:15'],
+            'amount' => ['required', 'numeric', 'min:1'],
+        ]);
+
+        $result = $mpesa->stkPush($data['phone'], (float) $data['amount'], 'POS'.Carbon::now()->format('His'));
+
+        return response()->json($result, $result['ok'] ? 200 : 422);
+    }
+
+    public function mpesaStatus(string $checkoutid, Mpesa $mpesa)
+    {
+        return response()->json($mpesa->status($checkoutid));
     }
 
     /**
@@ -39,7 +65,8 @@ class PosController extends Controller
             'discount' => ['nullable', 'numeric', 'min:0'],
             'tax' => ['nullable', 'numeric', 'min:0'],
             'paid' => ['required', 'numeric', 'min:0'],
-            'method' => ['required', 'in:cash,card,mobile'],
+            'method' => ['required', 'in:cash,card,mpesa'],
+            'mpesareceipt' => ['nullable', 'string', 'max:50'],
         ]);
 
         $sale = DB::transaction(function () use ($data, $request) {
@@ -88,6 +115,7 @@ class PosController extends Controller
                 'paid' => $data['paid'],
                 'balance' => $data['paid'] - $total,
                 'method' => $data['method'],
+                'mpesareceipt' => $data['mpesareceipt'] ?? null,
             ]);
 
             foreach ($lines as $line) {
@@ -115,6 +143,6 @@ class PosController extends Controller
 
     private function reference(): string
     {
-        return 'INV-'.Carbon::now()->format('ymd').'-'.strtoupper(\Illuminate\Support\Str::random(5));
+        return 'INV-'.Carbon::now()->format('ymd').'-'.strtoupper(Str::random(5));
     }
 }

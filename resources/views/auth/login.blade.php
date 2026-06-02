@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>Sign in · {{ config('app.name') }}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230f766e'><rect x='9' y='3' width='6' height='18' rx='1'/><rect x='3' y='9' width='18' height='6' rx='1'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
 <div class="auth-wrap">
     <div class="auth-side">
-        <div class="logo" style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--brand),#fff2);display:grid;place-items:center;font-weight:900;font-size:1.4rem;margin-bottom:24px">P</div>
+        <img src="{{ asset('images/logo.svg') }}" alt="PharmacyPOS" style="width:54px;height:54px;border-radius:14px;margin-bottom:24px">
         <h1>PharmacyPOS</h1>
         <p>The complete point-of-sale and inventory platform built for modern pharmacies.</p>
         <ul>
@@ -35,7 +35,7 @@
                 @csrf
                 <div class="field">
                     <label for="email">Email address</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="you@pharmacy.test">
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="you@gmail.com">
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
@@ -47,12 +47,6 @@
                 </div>
                 <button type="submit" class="btn primary block">Sign in</button>
             </form>
-
-            <div class="cred-hint">
-                <strong>Demo accounts</strong> (password: <code>Password123!</code>)<br>
-                Owner — <code>dianamwangi@gmail.com</code><br>
-                Attendant — <code>alexotieno@gmail.com</code>
-            </div>
         </div>
     </div>
 </div>

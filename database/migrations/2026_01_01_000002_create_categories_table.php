@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->timestamp('createdat')->nullable();
             $table->timestamp('updatedat')->nullable();
+            $table->softDeletes('deletedat');
         });
     }
 

@@ -15,14 +15,15 @@
             </div>
             <button class="btn primary">Apply</button>
             <button class="btn ghost no-print" type="button" onclick="window.print()"><x-icon name="printer" size="16" /> Print</button>
+            <a class="btn ghost no-print" href="{{ route('owner.backup') }}"><x-icon name="download" size="16" /> Backup Database</a>
         </form>
     </div>
 </div>
 
 <div class="grid cols-3">
-    <div class="card stat"><div class="iconbox"><x-icon name="dollar" size="22" /></div><div class="label">Total Sales</div><div class="value">${{ number_format($totalsales, 2) }}</div></div>
+    <div class="card stat"><div class="iconbox"><x-icon name="dollar" size="22" /></div><div class="label">Total Sales</div><div class="value">{{ money($totalsales) }}</div></div>
     <div class="card stat"><div class="iconbox"><x-icon name="receipt" size="22" /></div><div class="label">Orders</div><div class="value">{{ $ordercount }}</div></div>
-    <div class="card stat"><div class="iconbox"><x-icon name="chart" size="22" /></div><div class="label">Average Order</div><div class="value">${{ number_format($average, 2) }}</div></div>
+    <div class="card stat"><div class="iconbox"><x-icon name="chart" size="22" /></div><div class="label">Average Order</div><div class="value">{{ money($average) }}</div></div>
 </div>
 
 <div class="grid cols-2" style="margin-top:18px">
@@ -33,7 +34,7 @@
                 <thead><tr><th>Method</th><th class="num">Orders</th><th class="num">Total</th></tr></thead>
                 <tbody>
                 @forelse($bymethod as $m)
-                    <tr><td>{{ ucfirst($m->method) }}</td><td class="num">{{ $m->orders }}</td><td class="num">${{ number_format($m->total, 2) }}</td></tr>
+                    <tr><td>{{ strtoupper($m->method) }}</td><td class="num">{{ $m->orders }}</td><td class="num">{{ money($m->total) }}</td></tr>
                 @empty
                     <tr><td colspan="3" class="muted">No data in this range.</td></tr>
                 @endforelse
@@ -49,7 +50,7 @@
                 <thead><tr><th>Product</th><th class="num">Qty Sold</th><th class="num">Revenue</th></tr></thead>
                 <tbody>
                 @forelse($topproducts as $tp)
-                    <tr><td>{{ $tp->name }}</td><td class="num">{{ $tp->sold }}</td><td class="num">${{ number_format($tp->earned, 2) }}</td></tr>
+                    <tr><td>{{ $tp->name }}</td><td class="num">{{ $tp->sold }}</td><td class="num">{{ money($tp->earned) }}</td></tr>
                 @empty
                     <tr><td colspan="3" class="muted">No data in this range.</td></tr>
                 @endforelse
@@ -66,7 +67,7 @@
             <thead><tr><th>Date</th><th class="num">Orders</th><th class="num">Total</th></tr></thead>
             <tbody>
             @forelse($byday as $d)
-                <tr><td>{{ \Illuminate\Support\Carbon::parse($d->day)->format('d M Y') }}</td><td class="num">{{ $d->orders }}</td><td class="num">${{ number_format($d->total, 2) }}</td></tr>
+                <tr><td>{{ \Illuminate\Support\Carbon::parse($d->day)->format('d M Y') }}</td><td class="num">{{ $d->orders }}</td><td class="num">{{ money($d->total) }}</td></tr>
             @empty
                 <tr><td colspan="3" class="muted">No sales in this range.</td></tr>
             @endforelse
