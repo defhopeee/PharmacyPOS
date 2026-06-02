@@ -71,7 +71,7 @@
 @endif
 
 <div class="modal" id="user-modal">
-    <div class="modal-card" style="max-width:600px">
+    <div class="modal-card">
         <div class="modal-head"><h3>Staff Member</h3><button class="modal-close" data-modal-close type="button">&times;</button></div>
         <form class="ajax-form" method="POST" action="{{ route('owner.users.store') }}">
             @csrf

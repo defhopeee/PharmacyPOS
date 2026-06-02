@@ -94,12 +94,12 @@
                     </div>
                 </div>
                 <div class="form-grid">
+                    <div class="field"><label>Buying Price (KSh) *</label><input type="number" name="cost" step="0.01" min="0" value="0" required></div>
                     <div class="field"><label>Selling Price (KSh) *</label><input type="number" name="price" step="0.01" min="0" value="0" required></div>
-                    <div class="field"><label>Cost Price (KSh) *</label><input type="number" name="cost" step="0.01" min="0" value="0" required></div>
                 </div>
                 <div class="form-grid">
                     <div class="field"><label>Quantity in Stock *</label><input type="number" name="quantity" min="0" value="0" required></div>
-                    <div class="field"><label>Reorder Level *</label><input type="number" name="reorder" min="0" value="10" required></div>
+                    <div class="field"><label>Alert When Stock Below *</label><input type="number" name="reorder" min="0" value="10" required></div>
                 </div>
                 <div class="form-grid">
                     <div class="field"><label>Barcode</label><input type="text" name="barcode"></div>

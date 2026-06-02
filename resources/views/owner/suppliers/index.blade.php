@@ -41,7 +41,7 @@
 </div>
 
 <div class="modal" id="supplier-modal">
-    <div class="modal-card" style="max-width:580px">
+    <div class="modal-card">
         <div class="modal-head"><h3>Supplier</h3><button class="modal-close" data-modal-close type="button">&times;</button></div>
         <form class="ajax-form" method="POST" action="{{ route('owner.suppliers.store') }}">
             @csrf

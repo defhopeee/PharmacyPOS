@@ -39,7 +39,7 @@
 </div>
 
 <div class="modal" id="category-modal">
-    <div class="modal-card" style="max-width:520px">
+    <div class="modal-card">
         <div class="modal-head"><h3>Category</h3><button class="modal-close" data-modal-close type="button">&times;</button></div>
         <form class="ajax-form" method="POST" action="{{ route('owner.categories.store') }}">
             @csrf
