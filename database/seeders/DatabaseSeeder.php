@@ -31,10 +31,10 @@ class DatabaseSeeder extends Seeder
     private function seedUsers(): void
     {
         $users = [
-            ['name' => 'Diana Mwangi', 'email' => 'dianamwangi@gmail.com', 'role' => 'owner', 'phone' => '+1 555 0100'],
-            ['name' => 'Alex Otieno', 'email' => 'alexotieno@gmail.com', 'role' => 'attendant', 'phone' => '+1 555 0101'],
-            ['name' => 'Brenda Achieng', 'email' => 'brendaachieng@gmail.com', 'role' => 'attendant', 'phone' => '+1 555 0102'],
-            ['name' => 'Caleb Kimani', 'email' => 'calebkimani@gmail.com', 'role' => 'attendant', 'phone' => '+1 555 0103'],
+            ['name' => 'Diana Mwangi', 'email' => 'dianamwangi@gmail.com', 'role' => 'owner', 'phone' => '+254 712 345 678'],
+            ['name' => 'Alex Otieno', 'email' => 'alexotieno@gmail.com', 'role' => 'attendant', 'phone' => '+254 722 123 456'],
+            ['name' => 'Brenda Achieng', 'email' => 'brendaachieng@gmail.com', 'role' => 'attendant', 'phone' => '+254 701 987 654'],
+            ['name' => 'Caleb Kimani', 'email' => 'calebkimani@gmail.com', 'role' => 'attendant', 'phone' => '+254 733 456 789'],
         ];
 
         foreach ($users as $u) {
@@ -68,9 +68,9 @@ class DatabaseSeeder extends Seeder
     private function seedSuppliers(): array
     {
         $suppliers = [
-            ['name' => 'MediSource Distributors', 'phone' => '+1 555 2000', 'email' => 'medisourcesales@gmail.com', 'address' => '12 Industrial Way'],
-            ['name' => 'HealthLine Pharma', 'phone' => '+1 555 2001', 'email' => 'healthlineorders@gmail.com', 'address' => '88 Market Street'],
-            ['name' => 'GlobalMed Supplies', 'phone' => '+1 555 2002', 'email' => 'globalmedinfo@gmail.com', 'address' => '5 Commerce Plaza'],
+            ['name' => 'MediSource Distributors', 'phone' => '+254 720 100 200', 'email' => 'medisourcesales@gmail.com', 'address' => 'Enterprise Road, Industrial Area, Nairobi'],
+            ['name' => 'HealthLine Pharma', 'phone' => '+254 711 200 201', 'email' => 'healthlineorders@gmail.com', 'address' => 'Moi Avenue, Mombasa'],
+            ['name' => 'GlobalMed Supplies', 'phone' => '+254 799 300 202', 'email' => 'globalmedinfo@gmail.com', 'address' => 'Kenyatta Avenue, Nakuru'],
         ];
 
         $list = [];
@@ -131,7 +131,7 @@ class DatabaseSeeder extends Seeder
         $attendants = User::where('role', 'attendant')->get();
         $products = Product::all();
         $methods = ['cash', 'card', 'mpesa'];
-        $customers = ['Walk-in', 'John Doe', 'Mary Smith', 'Peter Jones', null, 'Grace Lee'];
+        $customers = ['Walk-in', 'James Kamau', 'Mary Wanjiru', 'Peter Omondi', null, 'Grace Njeri'];
 
         // Spread ~40 sales across the last 14 days.
         for ($n = 0; $n < 40; $n++) {
