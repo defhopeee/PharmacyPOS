@@ -152,7 +152,7 @@ class DatabaseSeeder extends Seeder
             $paid = ceil($total / 5) * 5; // round up to nearest 5
 
             $sale = Sale::create([
-                'reference' => 'INV-' . $when->format('ymd') . '-' . strtoupper(Str::random(5)),
+                'reference' => 'INV' . $when->format('ymd') . strtoupper(Str::random(5)),
                 'userid' => $attendant->id,
                 'total' => $total,
                 'paid' => $paid,

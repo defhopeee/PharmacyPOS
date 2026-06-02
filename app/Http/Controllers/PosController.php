@@ -132,6 +132,6 @@ class PosController extends Controller
 
     private function reference(): string
     {
-        return 'INV-'.Carbon::now()->format('ymd').'-'.strtoupper(Str::random(5));
+        return 'INV'.Carbon::now()->format('ymd').strtoupper(Str::random(5));
     }
 }

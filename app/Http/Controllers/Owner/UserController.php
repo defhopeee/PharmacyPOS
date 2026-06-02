@@ -94,8 +94,18 @@ class UserController extends Controller
 
     private function generatePassword(): string
     {
-        // Readable but strong: e.g. "Med-7K9Q>m"
-        return 'Med-'.Str::password(8, letters: true, numbers: true, symbols: true);
+        // Strong, no dashes/underscores, avoids look-alike characters.
+        $sets = ['ABCDEFGHJKLMNPQRSTUVWXYZ', 'abcdefghijkmnpqrstuvwxyz', '23456789', '!@#$%*?'];
+        $pw = '';
+        foreach ($sets as $set) {
+            $pw .= $set[random_int(0, strlen($set) - 1)];
+        }
+        $all = implode('', $sets);
+        for ($i = 0; $i < 6; $i++) {
+            $pw .= $all[random_int(0, strlen($all) - 1)];
+        }
+
+        return str_shuffle($pw);
     }
 
     private function normalisePhone(string $phone): string
